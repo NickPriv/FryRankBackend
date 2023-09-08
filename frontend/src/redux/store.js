@@ -10,9 +10,6 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
 })
 
-console.log("Printing store")
-console.log(store.getState())
-
 sagaMiddleware.run(rootSaga)
 
 export default store;

@@ -1,18 +1,17 @@
 export const types = {
-    GET_ALL_REVIEWS_FOR_RESTAURANT: "GET_ALL_REVIEWS_FOR_RESTAURANT",
+    GET_RESTAURANT_REVIEWS_REQUEST: "GET_RESTAURANT_REVIEWS_REQUEST",
     GET_RESTAURANT_REVIEWS_SUCCESS: "GET_RESTAURANT_REVIEWS_SUCCESS",
     GET_RESTAURANT_REVIEWS_FAILURE: "GET_RESTAURANT_REVIEWS_FAILURE",
-    GET_ERROR: "GET_ERROR",
 }
 
 export const initialState = {
-  reviews: [],
+  reviews: null,
   error: ''
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case types.GET_ALL_REVIEWS_FOR_RESTAURANT: {
+        case types.GET_RESTAURANT_REVIEWS_REQUEST: {
             return {
                 ...state
             };
@@ -33,20 +32,13 @@ export default (state = initialState, action) => {
             }
         }
 
-        case types.GET_ERROR:
-            return {
-                ...state,
-                error: state.errorMessage,
-            }
-
         default:
             return state;
   }
 }
 
 export const reviewsActions = {
-    startGetAllReviewsForRestaurantRequest: restaurantId => ({ type: types.GET_ALL_REVIEWS_FOR_RESTAURANT, restaurantId }),
+    startGetAllReviewsForRestaurantRequest: restaurantId => ({ type: types.GET_RESTAURANT_REVIEWS_REQUEST, restaurantId }),
     successfulGetAllReviewsForRestaurantRequest: data => ({ type: types.GET_RESTAURANT_REVIEWS_SUCCESS, data }),
     failedGetAllReviewsForRestaurantRequest: error => ({ type: types.GET_RESTAURANT_REVIEWS_FAILURE, error }),
-    getError: () => ({ type: types.GET_ERROR }),
 }

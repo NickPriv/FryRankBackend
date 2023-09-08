@@ -2,6 +2,7 @@ import { call, put, takeEvery } from 'redux-saga/effects'
 import axios from 'axios';
 
 import { types, reviewsActions } from '../../reducers/reviews';
+import { ERROR_MESSAGE } from '../../constants';
 
 export function* callGetAllReviewsForRestaurant({ restaurantId }) {
     try {
@@ -9,10 +10,10 @@ export function* callGetAllReviewsForRestaurant({ restaurantId }) {
         const { data } = yield axios.get(API_PATH, { params: { restaurantId } });
         yield put(reviewsActions.successfulGetAllReviewsForRestaurantRequest(data));
     } catch (err) {
-        yield put(reviewsActions.failedGetAllReviewsForRestaurantRequest('Failed getting reviews for restaurant'));
+        yield put(reviewsActions.failedGetAllReviewsForRestaurantRequest(ERROR_MESSAGE));
     }
 }
 
 export default function* watchReviewsRequest() {
-    yield takeEvery(types.GET_ALL_REVIEWS_FOR_RESTAURANT, callGetAllReviewsForRestaurant);
+    yield takeEvery(types.GET_RESTAURANT_REVIEWS_REQUEST, callGetAllReviewsForRestaurant);
 }
