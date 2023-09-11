@@ -16,7 +16,7 @@ function App() {
             // TODO: The path for this endpoint should just be /restaurants, but since we share ports with the
             // backend service which also has the endpoint /restaurants, we need to come up with a different name for
             // now. Eventually, we should migrate this to /restaurants.
-            <Route path="/restaurantspage" component={Restaurants} />
+            <Route path="/restaurants-page" component={Restaurants} />
           </Switch>
         </Router>
       </Provider>

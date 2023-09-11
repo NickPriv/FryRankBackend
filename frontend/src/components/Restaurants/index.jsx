@@ -1,5 +1,6 @@
 import { PropTypes } from 'prop-types';
 import { Fragment } from 'react';
+import Loader from "../Common/Loader"
 
 const propTypes = {
     restaurants: PropTypes.array.isRequired,
@@ -29,7 +30,11 @@ const Restaurants = ({ restaurants, error }) => {
         return <p>{error}</p>;
     }
     else if (restaurants.length === 0) {
-        return <p>No restaurants exist yet</p>
+        return (
+            <div>
+                <Loader />
+            </div>
+        )
     }
     else {
         return (
