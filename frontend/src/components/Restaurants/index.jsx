@@ -1,6 +1,6 @@
 import { PropTypes } from 'prop-types';
 import { Fragment } from 'react';
-import Loader from "../Common/Loader"
+import FrySpinner from "../Common/FrySpinner"
 
 const propTypes = {
     restaurants: PropTypes.array.isRequired,
@@ -32,7 +32,7 @@ const Restaurants = ({ restaurants, error }) => {
     else if (restaurants.length === 0) {
         return (
             <div>
-                <Loader />
+                <FrySpinner />
             </div>
         )
     }
