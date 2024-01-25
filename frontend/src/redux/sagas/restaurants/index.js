@@ -3,7 +3,6 @@ import axios from 'axios';
 
 import { types, restaurantsActions } from '../../reducers/restaurants';
 import { GOOGLE_API_PATH } from '../../constants';
-import { API_KEY } from '../../../properties'
 
 const HEADER_CONTENT_TYPE = 'Content-Type';
 const HEADER_API_KEY = 'X-Goog-Api-Key';
@@ -15,7 +14,7 @@ export function* callGetRestaurants({ textQuery }) {
             { 'textQuery': textQuery },
             { headers: {
                 [HEADER_CONTENT_TYPE]: 'application/json',
-                [HEADER_API_KEY]: API_KEY,
+                [HEADER_API_KEY]: process.env.GOOGLE_API_KEY,
                 [HEADER_FIELD_MASK]: 'places.displayName,places.formattedAddress,places.id'
             }}
         );
@@ -30,7 +29,7 @@ export function* callGetRestaurantById({ restaurantId }) {
         const { data } = yield axios.get(GOOGLE_API_PATH + "places/" + restaurantId,
             { headers: {
                 [HEADER_CONTENT_TYPE]: 'application/json',
-                [HEADER_API_KEY]: API_KEY,
+                [HEADER_API_KEY]: process.env.GOOGLE_API_KEY,
                 [HEADER_FIELD_MASK]: 'id,displayName,formattedAddress'
             }}
         );
