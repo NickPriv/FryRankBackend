@@ -8,20 +8,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-public class ReviewController {
+import static com.fryrank.Constants.BASE_URI;
 
-    private static final String REVIEWS_URI = "/reviews";
+@RestController
+@RequestMapping(BASE_URI + "/reviews")
+public class ReviewController {
 
     @Autowired
     private ReviewDAL reviewDAL;
 
-    @GetMapping(value = REVIEWS_URI)
+    @GetMapping
     public List<Review> getAllReviewsForRestaurant(@RequestParam("restaurantId") @NonNull final String restaurantId) {
         return reviewDAL.getAllReviewsByRestaurantId(restaurantId);
     }
 
-    @PostMapping(value = REVIEWS_URI)
+    @PostMapping
     public Review addNewReviewForRestaurant(@RequestBody @NonNull final Review review) {
         return reviewDAL.addNewReview(review);
     }

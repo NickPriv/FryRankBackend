@@ -9,7 +9,7 @@ export class Homepage extends Component {
   };
 
   async componentDidMount() {
-    const response = await fetch('http://localhost:8080/welcome');
+    const response = await fetch('http://localhost:3000/api/welcome');
     const body = await response.text();
     this.setState({message: body});
   }
