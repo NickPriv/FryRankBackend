@@ -1,2 +1,1 @@
-web: cd frontend && npm install --only=dev && npm install && npm install serve -g && npm run build && npm start
-worker: cd ./
+web: java -Dserver.port=$PORT $JAVA_OPTS -jar target/*.jar
