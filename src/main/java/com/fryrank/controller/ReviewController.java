@@ -6,12 +6,14 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import static com.fryrank.Constants.API_PATH;
+
 import java.util.List;
 
 @RestController
 public class ReviewController {
 
-    private static final String REVIEWS_URI = "/reviews";
+    private static final String REVIEWS_URI = API_PATH + "/reviews";
 
     @Autowired
     private ReviewDAL reviewDAL;
