@@ -1,5 +1,6 @@
 package com.fryrank.controller;
 
+import com.fryrank.Constants;
 import com.fryrank.dal.ReviewDAL;
 import com.fryrank.model.Review;
 import lombok.NonNull;
@@ -11,7 +12,7 @@ import java.util.List;
 @RestController
 public class ReviewController {
 
-    private static final String REVIEWS_URI = "/reviews";
+    private static final String REVIEWS_URI = Constants.API_PATH + "/reviews";
 
     @Autowired
     private ReviewDAL reviewDAL;

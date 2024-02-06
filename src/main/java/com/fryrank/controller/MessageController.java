@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MessageController {
 
-    @GetMapping("/welcome")
+    @GetMapping(Constants.API_PATH + "/welcome")
     public String getWelcomeMessage() {
         return Constants.WELCOME_MESSAGE;
     }
