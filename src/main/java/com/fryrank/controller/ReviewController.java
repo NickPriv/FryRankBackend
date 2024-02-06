@@ -1,18 +1,19 @@
 package com.fryrank.controller;
 
-import com.fryrank.Constants;
 import com.fryrank.dal.ReviewDAL;
 import com.fryrank.model.Review;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import static com.fryrank.Constants.API_PATH;
+
 import java.util.List;
 
 @RestController
 public class ReviewController {
 
-    private static final String REVIEWS_URI = Constants.API_PATH + "/reviews";
+    private static final String REVIEWS_URI = API_PATH + "/reviews";
 
     @Autowired
     private ReviewDAL reviewDAL;
