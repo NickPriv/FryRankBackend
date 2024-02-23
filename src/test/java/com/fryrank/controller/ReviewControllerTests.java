@@ -2,7 +2,6 @@ package com.fryrank.controller;
 
 import com.fryrank.dal.ReviewDAL;
 import com.fryrank.model.Review;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,6 +11,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,7 +35,7 @@ public class ReviewControllerTests {
 
         List<Review> actualReviews = controller.getAllReviewsForRestaurant("1");
 
-        Assert.assertEquals(actualReviews, expectedReviews);
+        assertEquals(actualReviews, expectedReviews);
     }
 
     @Test
@@ -45,7 +46,7 @@ public class ReviewControllerTests {
 
         Review actualReview = controller.addNewReviewForRestaurant(expectedReview);
 
-        Assert.assertEquals(expectedReview, actualReview);
+        assertEquals(expectedReview, actualReview);
     }
 
 }

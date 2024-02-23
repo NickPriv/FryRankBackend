@@ -1,12 +1,10 @@
 package com.fryrank.dal;
 
 import com.fryrank.model.Review;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -14,6 +12,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReviewDALTests {
@@ -33,11 +34,11 @@ public class ReviewDALTests {
                 add(new Review("review_id_2", "restaurant_id_2", "author_id_2", 7.0 , "title_2", "body_2"));
             }
         };
-        Mockito.when(mongoTemplate.find(query, Review.class)).thenReturn(expectedReviews);
+        when(mongoTemplate.find(query, Review.class)).thenReturn(expectedReviews);
 
         List<Review> actualReviews = reviewDAL.getAllReviewsByRestaurantId("1");
 
-        Assert.assertEquals(actualReviews, expectedReviews);
+        assertEquals(actualReviews, expectedReviews);
     }
 
     @Test
@@ -46,6 +47,6 @@ public class ReviewDALTests {
 
         Review actualReview = reviewDAL.addNewReview(expectedReview);
 
-        Assert.assertEquals(expectedReview, actualReview);
+        assertEquals(expectedReview, actualReview);
     }
 }
