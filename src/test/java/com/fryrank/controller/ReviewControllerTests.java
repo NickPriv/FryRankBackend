@@ -49,4 +49,9 @@ public class ReviewControllerTests {
         assertEquals(expectedReview, actualReview);
     }
 
+    @Test(expected = Exception.class)
+    public void testAddNewReviewForNullRestaurantID() throws Exception {
+        Review actualReview = controller.addNewReviewForRestaurant(null);
+    }
+
 }
