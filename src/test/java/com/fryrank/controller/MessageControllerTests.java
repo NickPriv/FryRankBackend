@@ -1,10 +1,9 @@
 package com.fryrank.controller;
-;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import static com.fryrank.Constants.WELCOME_MESSAGE;
+import static org.junit.Assert.assertEquals;
 
 public class MessageControllerTests {
 
@@ -15,6 +14,6 @@ public class MessageControllerTests {
         String actualMessage = controller.getWelcomeMessage();
         String expectedMessage = WELCOME_MESSAGE;
 
-        Assert.assertEquals(actualMessage, expectedMessage);
+        assertEquals(actualMessage, expectedMessage);
     }
 }

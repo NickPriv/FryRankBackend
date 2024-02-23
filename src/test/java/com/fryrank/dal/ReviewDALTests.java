@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
@@ -15,6 +14,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReviewDALTests {
@@ -27,7 +27,7 @@ public class ReviewDALTests {
     @Test
     public void testGetAllReviewsByRestaurantId() throws Exception {
         Query query = new Query();
-        query.addCriteria(Criteria.where("restaurantId").is("1"));
+        query.addCriteria(where("restaurantId").is("1"));
         List<Review> expectedReviews = new ArrayList<>() {
             {
                 add(new Review("review_id_1", "restaurant_id_1", "author_id_1", 5.0 , "title_1", "body_1"));

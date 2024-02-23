@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -31,7 +32,7 @@ public class ReviewControllerTests {
                     add(new Review("review_id_2", "restaurant_id_2", "author_id_2", 7.0 , "title_2", "body_2"));
                 }
         };
-        Mockito.when(reviewDAL.getAllReviewsByRestaurantId("1")).thenReturn(expectedReviews);
+        when(reviewDAL.getAllReviewsByRestaurantId("1")).thenReturn(expectedReviews);
 
         List<Review> actualReviews = controller.getAllReviewsForRestaurant("1");
 
@@ -42,7 +43,7 @@ public class ReviewControllerTests {
     public void testAddNewReviewForRestaurant() throws Exception {
         Review expectedReview = new Review("review_id_1", "restaurant_id_1", "author_id_1", 5.0 , "title_1", "body_1");
 
-        Mockito.when(reviewDAL.addNewReview(expectedReview)).thenReturn(expectedReview);
+        when(reviewDAL.addNewReview(expectedReview)).thenReturn(expectedReview);
 
         Review actualReview = controller.addNewReviewForRestaurant(expectedReview);
 
@@ -51,7 +52,7 @@ public class ReviewControllerTests {
 
     @Test(expected = Exception.class)
     public void testAddNewReviewForNullRestaurantID() throws Exception {
-        Review actualReview = controller.addNewReviewForRestaurant(null);
+        controller.addNewReviewForRestaurant(null);
     }
 
 }
