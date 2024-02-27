@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -28,8 +27,8 @@ public class ReviewControllerTests {
     public void testGetAllReviewsForRestaurant() throws Exception {
         List<Review> expectedReviews = new ArrayList<>() {
                 {
-                    add(new Review("review_id_1", "restaurant_id_1", "author_id_1", 5.0 , "title_1", "body_1"));
-                    add(new Review("review_id_2", "restaurant_id_2", "author_id_2", 7.0 , "title_2", "body_2"));
+                    add(new Review("review_id_1", "restaurant_id_1", "author_id_1", 5.0, "title_1", "body_1"));
+                    add(new Review("review_id_2", "restaurant_id_2", "author_id_2", 7.0, "title_2", "body_2"));
                 }
         };
         when(reviewDAL.getAllReviewsByRestaurantId("1")).thenReturn(expectedReviews);
@@ -41,7 +40,7 @@ public class ReviewControllerTests {
 
     @Test
     public void testAddNewReviewForRestaurant() throws Exception {
-        Review expectedReview = new Review("review_id_1", "restaurant_id_1", "author_id_1", 5.0 , "title_1", "body_1");
+        Review expectedReview = new Review("review_id_1", "restaurant_id_1", "author_id_1", 5.0, "title_1", "body_1");
 
         when(reviewDAL.addNewReview(expectedReview)).thenReturn(expectedReview);
 
@@ -50,9 +49,50 @@ public class ReviewControllerTests {
         assertEquals(expectedReview, actualReview);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = NullPointerException.class)
     public void testAddNewReviewForNullRestaurantID() throws Exception {
         controller.addNewReviewForRestaurant(null);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void testAddNewReviewNullReviewID() throws Exception {
+        Review expectedReview = new Review(null, "restaurant_id_1", "author_id_1", 5.0, "title_1", "body_1");
+
+        controller.addNewReviewForRestaurant(expectedReview);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testAddNewReviewNullRestaurantID() throws Exception {
+        Review expectedReview = new Review("review_id_1", null, "author_id_1", 5.0, "title_1", "body_1");
+
+        controller.addNewReviewForRestaurant(expectedReview);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testAddNewReviewNullAuthorID() throws Exception {
+        Review expectedReview = new Review("review_id_1", "restaurant_id_1", null, 5.0, "title_1", "body_1");
+
+        controller.addNewReviewForRestaurant(expectedReview);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testAddNewReviewNullScore() throws Exception {
+        Review expectedReview = new Review("review_id_1", "restaurant_id_1", "author_id_1", null, "title_1", "body_1");
+
+        controller.addNewReviewForRestaurant(expectedReview);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testAddNewReviewNullTitle() throws Exception {
+        Review expectedReview = new Review("review_id_1", "restaurant_id_1", "author_id_1", 5.0, null, "body_1");
+
+        controller.addNewReviewForRestaurant(expectedReview);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testAddNewReviewNullBody() throws Exception {
+        Review expectedReview = new Review("review_id_1", "restaurant_id_1", "author_id_1", 5.0, "title_1", null);
+
+        controller.addNewReviewForRestaurant(expectedReview);
+    }
 }
