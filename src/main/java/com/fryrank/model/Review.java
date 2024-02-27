@@ -8,8 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("review")
 @Data
 public class Review {
-
-    @NonNull
+    
     @Id
     private final String reviewId;
 

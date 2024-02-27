@@ -50,15 +50,19 @@ public class ReviewControllerTests {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testAddNewReviewForNullRestaurantID() throws Exception {
+    public void testAddNewReviewForNullRestaurant() throws Exception {
         controller.addNewReviewForRestaurant(null);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testAddNewReviewNullReviewID() throws Exception {
         Review expectedReview = new Review(null, "restaurant_id_1", "author_id_1", 5.0, "title_1", "body_1");
 
-        controller.addNewReviewForRestaurant(expectedReview);
+        when(reviewDAL.addNewReview(expectedReview)).thenReturn(expectedReview);
+
+        Review actualReview = controller.addNewReviewForRestaurant(expectedReview);
+
+        assertEquals(expectedReview, actualReview);
     }
 
     @Test(expected = NullPointerException.class)
