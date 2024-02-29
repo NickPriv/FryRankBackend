@@ -44,7 +44,7 @@ public class ReviewDALImpl implements ReviewDAL {
 
         if (uniqueResult.isPresent()) {
             final Float rawScore = uniqueResult.get().getAvgScore();
-            final BigDecimal averageScoreBigDecimal = new BigDecimal(rawScore).setScale(2, RoundingMode.DOWN);
+            final BigDecimal averageScoreBigDecimal = new BigDecimal(rawScore).setScale(1, RoundingMode.DOWN);
 
             return new GetAllReviewsOutput(reviews, averageScoreBigDecimal.floatValue());
         } else {
