@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
@@ -38,11 +38,16 @@ public class ReviewDALImpl implements ReviewDAL {
         final GroupOperation averageScore = group("restaurantId").avg("score").as("avgScore");
         final Aggregation aggregation = newAggregation(filterToRestaurantId, averageScore);
         final AggregationResults<RestaurantAvgScore> result = mongoTemplate.aggregate(aggregation, "review", RestaurantAvgScore.class);
+        final Optional<RestaurantAvgScore> uniqueResult = Optional.ofNullable(result.getUniqueMappedResult());
 
-        final Float rawScore = Objects.requireNonNull(result.getUniqueMappedResult()).getAvgScore();
-        final BigDecimal averageScoreBigDecimal = new BigDecimal(rawScore).setScale(2, RoundingMode.DOWN);
+        if (uniqueResult.isPresent()) {
+            final Float rawScore = uniqueResult.get().getAvgScore();
+            final BigDecimal averageScoreBigDecimal = new BigDecimal(rawScore).setScale(2, RoundingMode.DOWN);
 
-        return new GetAllReviewsOutput(reviews, averageScoreBigDecimal.floatValue());
+            return new GetAllReviewsOutput(reviews, averageScoreBigDecimal.floatValue());
+        } else {
+            return new GetAllReviewsOutput(reviews, null);
+        }
     }
 
     @Override

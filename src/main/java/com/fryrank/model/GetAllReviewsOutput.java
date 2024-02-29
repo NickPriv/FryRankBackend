@@ -11,6 +11,5 @@ public class GetAllReviewsOutput {
     @NonNull
     private final List<Review> reviews;
 
-    @NonNull
     private final Float averageScore;
 }
