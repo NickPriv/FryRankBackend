@@ -24,18 +24,20 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 @Repository
 public class ReviewDALImpl implements ReviewDAL {
 
+    public static final String RESTAURANT_ID_KEY = "restaurantId";
+
     @Autowired
     private MongoTemplate mongoTemplate;
 
     @Override
     public GetAllReviewsOutput getAllReviewsByRestaurantId(@NonNull final String restaurantId) {
         final Query query = new Query();
-        final Criteria equalToRestaurantIdCriteria = Criteria.where("restaurantId").is(restaurantId);
+        final Criteria equalToRestaurantIdCriteria = Criteria.where(RESTAURANT_ID_KEY).is(restaurantId);
         query.addCriteria(equalToRestaurantIdCriteria);
         final List<Review> reviews = mongoTemplate.find(query, Review.class);
 
         final MatchOperation filterToRestaurantId = match(equalToRestaurantIdCriteria);
-        final GroupOperation averageScore = group("restaurantId").avg("score").as("avgScore");
+        final GroupOperation averageScore = group(RESTAURANT_ID_KEY).avg("score").as("avgScore");
         final Aggregation aggregation = newAggregation(filterToRestaurantId, averageScore);
         final AggregationResults<RestaurantAvgScore> result = mongoTemplate.aggregate(aggregation, "review", RestaurantAvgScore.class);
         final Optional<RestaurantAvgScore> uniqueResult = Optional.ofNullable(result.getUniqueMappedResult());

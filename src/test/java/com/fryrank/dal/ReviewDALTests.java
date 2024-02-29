@@ -17,9 +17,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fryrank.dal.ReviewDALImpl.RESTAURANT_ID_KEY;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -32,7 +32,6 @@ public class ReviewDALTests {
     ReviewDALImpl reviewDAL;
 
     private static final String TEST_RESTAURANT_ID = "1";
-    private static final String RESTAURANT_ID_KEY = "restaurantId";
 
     @Test
     public void testGetAllReviewsByRestaurantId_happyPath() throws Exception {
