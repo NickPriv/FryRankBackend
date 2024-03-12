@@ -19,6 +19,7 @@ import java.util.List;
 
 import static com.fryrank.dal.ReviewDALImpl.RESTAURANT_ID_KEY;
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -69,6 +70,11 @@ public class ReviewDALTests {
         final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(expectedReviews, null);
         final GetAllReviewsOutput actualOutput = reviewDAL.getAllReviewsByRestaurantId(TEST_RESTAURANT_ID);
         assertEquals(actualOutput, expectedOutput);
+    }
+
+    @Test
+    public void testGetAllReviewsByRestaurantId_nullRestaurantId() {
+        assertThrows(NullPointerException.class, () -> reviewDAL.getAllReviewsByRestaurantId(null));
     }
 
     @Test
