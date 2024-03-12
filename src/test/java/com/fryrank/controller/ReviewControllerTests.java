@@ -1,6 +1,7 @@
 package com.fryrank.controller;
 
 import com.fryrank.dal.ReviewDAL;
+import com.fryrank.model.GetAllReviewsOutput;
 import com.fryrank.model.Review;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,17 +26,17 @@ public class ReviewControllerTests {
 
     @Test
     public void testGetAllReviewsForRestaurant() throws Exception {
-        List<Review> expectedReviews = new ArrayList<>() {
+        final List<Review> expectedReviews = new ArrayList<>() {
                 {
                     add(new Review("review_id_1", "restaurant_id_1", "author_id_1", 5.0, "title_1", "body_1"));
                     add(new Review("review_id_2", "restaurant_id_2", "author_id_2", 7.0, "title_2", "body_2"));
                 }
         };
-        when(reviewDAL.getAllReviewsByRestaurantId("1")).thenReturn(expectedReviews);
+        final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(expectedReviews, 6f);
+        when(reviewDAL.getAllReviewsByRestaurantId("1")).thenReturn(expectedOutput);
 
-        List<Review> actualReviews = controller.getAllReviewsForRestaurant("1");
-
-        assertEquals(actualReviews, expectedReviews);
+        final GetAllReviewsOutput actualOutput = controller.getAllReviewsForRestaurant("1");
+        assertEquals(actualOutput, expectedOutput);
     }
 
     @Test

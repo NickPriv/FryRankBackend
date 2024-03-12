@@ -1,6 +1,7 @@
 package com.fryrank.controller;
 
 import com.fryrank.dal.ReviewDAL;
+import com.fryrank.model.GetAllReviewsOutput;
 import com.fryrank.model.Review;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class ReviewController {
     private ReviewDAL reviewDAL;
 
     @GetMapping(value = REVIEWS_URI)
-    public List<Review> getAllReviewsForRestaurant(@RequestParam("restaurantId") @NonNull final String restaurantId) {
+    public GetAllReviewsOutput getAllReviewsForRestaurant(@RequestParam("restaurantId") @NonNull final String restaurantId) {
         return reviewDAL.getAllReviewsByRestaurantId(restaurantId);
     }
 
