@@ -17,6 +17,5 @@ In progress:
 - Integrating with Google APIs to retrieve restaurants worldwide
 
 ### Rapid Testing Instructions ###
-1. Build the image via IntelliJ (run the Dockerfile) -- do this once
-2. Start the container via IntelliJ (run the compose file) -- do this once
-3. Every time after making a change, run 'FryRankApplication' via the main class to run your changes on port 8080
+1. Create a `.env` file. Reference the `.env.sample` file for help with the env variables to set.
+2. From the repository root: run `docker-compose up -d --build`
