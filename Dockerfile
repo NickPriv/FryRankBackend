@@ -1,3 +1,11 @@
+# Build stage
+FROM  maven:3.9.6-eclipse-temurin-17-alpine AS build
+COPY src /home/app/src
+COPY pom.xml /home/app
+RUN mvn -f /home/app/pom.xml clean test package
+
+# Package stage
 FROM eclipse-temurin:17-jre-jammy
-COPY out/artifacts/FryRank_jar/FryRank.jar app.jar
+COPY --from=build /home/app/target/*.jar app.jar
+EXPOSE 8080
 ENTRYPOINT ["java","-jar","app.jar"]

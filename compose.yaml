@@ -2,7 +2,10 @@ version: '1.0'
 
 services:
   fryrank-service:
-    build: .
+    build:
+      context: .
     container_name: fryrank-service
     ports:
-      - "8000:8000"
+      - "8080:8080"
+    env_file:
+      - .env
