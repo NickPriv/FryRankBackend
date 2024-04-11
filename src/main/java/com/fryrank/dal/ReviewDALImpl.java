@@ -1,8 +1,6 @@
 package com.fryrank.dal;
 
-import com.fryrank.model.GetAllReviewsOutput;
-import com.fryrank.model.RestaurantAvgScore;
-import com.fryrank.model.Review;
+import com.fryrank.model.*;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -16,7 +14,9 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
@@ -36,20 +36,36 @@ public class ReviewDALImpl implements ReviewDAL {
         query.addCriteria(equalToRestaurantIdCriteria);
         final List<Review> reviews = mongoTemplate.find(query, Review.class);
 
-        final MatchOperation filterToRestaurantId = match(equalToRestaurantIdCriteria);
-        final GroupOperation averageScore = group(RESTAURANT_ID_KEY).avg("score").as("avgScore");
-        final Aggregation aggregation = newAggregation(filterToRestaurantId, averageScore);
-        final AggregationResults<RestaurantAvgScore> result = mongoTemplate.aggregate(aggregation, "review", RestaurantAvgScore.class);
-        final Optional<RestaurantAvgScore> uniqueResult = Optional.ofNullable(result.getUniqueMappedResult());
+        return new GetAllReviewsOutput(reviews);
+    }
 
-        if (uniqueResult.isPresent()) {
-            final Float rawScore = uniqueResult.get().getAvgScore();
-            final BigDecimal averageScoreBigDecimal = new BigDecimal(rawScore).setScale(1, RoundingMode.DOWN);
+    @Override
+    public GetAggregateReviewInformationOutput getAggregateReviewInformationForRestaurants(@NonNull final List<String> restaurantIds, @NonNull final AggregateReviewFilter aggregateReviewFilter) {
+        final Query query = new Query().addCriteria(Criteria.where(RESTAURANT_ID_KEY).in(restaurantIds));
 
-            return new GetAllReviewsOutput(reviews, averageScoreBigDecimal.floatValue());
-        } else {
-            return new GetAllReviewsOutput(reviews, null);
+        Map<String, AggregateReviewInformation> restaurantIdToAggregateReviewInformation = new HashMap<String, AggregateReviewInformation>();
+
+        for(String restaurantId : restaurantIds) {
+            final Criteria includeRestaurantIdsCriteria = Criteria.where(RESTAURANT_ID_KEY).is(restaurantId);
+            final MatchOperation filterToRestaurantId = match(includeRestaurantIdsCriteria);
+            final GroupOperation averageScoreGroupOperation = group(RESTAURANT_ID_KEY).avg("score").as("avgScore");
+            final Aggregation aggregation = newAggregation(filterToRestaurantId, averageScoreGroupOperation);
+            final AggregationResults<RestaurantAvgScore> result = mongoTemplate.aggregate(aggregation, "review", RestaurantAvgScore.class);
+            final Optional<RestaurantAvgScore> uniqueResult = Optional.ofNullable(result.getUniqueMappedResult());
+
+            if (uniqueResult.isPresent()) {
+                Float averageScore = null;
+
+                if(aggregateReviewFilter.getIncludeRating()) {
+                    final Float rawScore = uniqueResult.get().getAvgScore();
+                    averageScore = new BigDecimal(rawScore).setScale(1, RoundingMode.DOWN).floatValue();
+                }
+
+                restaurantIdToAggregateReviewInformation.put(restaurantId, new AggregateReviewInformation(restaurantId, averageScore));
+            }
         }
+
+        return new GetAggregateReviewInformationOutput(restaurantIdToAggregateReviewInformation);
     }
 
     @Override

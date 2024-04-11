@@ -47,11 +47,13 @@ public class ReviewDALTests {
         };
         when(mongoTemplate.find(query, Review.class)).thenReturn(expectedReviews);
 
-        final AggregationResults<RestaurantAvgScore> aggregationResults = new AggregationResults<>(List.of(
+        /*final AggregationResults<RestaurantAvgScore> aggregationResults = new AggregationResults<>(List.of(
                 new RestaurantAvgScore(RESTAURANT_ID_KEY, 6f)), new Document());
         when(mongoTemplate.aggregate(any(Aggregation.class), anyString(), eq(RestaurantAvgScore.class))).thenReturn(aggregationResults);
 
         final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(expectedReviews, 6f);
+        final GetAllReviewsOutput actualOutput = reviewDAL.getAllReviewsByRestaurantId(TEST_RESTAURANT_ID);*/
+        final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(expectedReviews);
         final GetAllReviewsOutput actualOutput = reviewDAL.getAllReviewsByRestaurantId(TEST_RESTAURANT_ID);
         assertEquals(actualOutput, expectedOutput);
     }
@@ -64,10 +66,10 @@ public class ReviewDALTests {
         final List<Review> expectedReviews = List.of();
         when(mongoTemplate.find(query, Review.class)).thenReturn(expectedReviews);
 
-        final AggregationResults<RestaurantAvgScore> aggregationResults = new AggregationResults<>(List.of(), new Document());
-        when(mongoTemplate.aggregate(any(Aggregation.class), anyString(), eq(RestaurantAvgScore.class))).thenReturn(aggregationResults);
+        /*final AggregationResults<RestaurantAvgScore> aggregationResults = new AggregationResults<>(List.of(), new Document());
+        when(mongoTemplate.aggregate(any(Aggregation.class), anyString(), eq(RestaurantAvgScore.class))).thenReturn(aggregationResults);*/
 
-        final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(expectedReviews, null);
+        final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(expectedReviews);
         final GetAllReviewsOutput actualOutput = reviewDAL.getAllReviewsByRestaurantId(TEST_RESTAURANT_ID);
         assertEquals(actualOutput, expectedOutput);
     }

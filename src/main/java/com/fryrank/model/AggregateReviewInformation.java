@@ -5,7 +5,7 @@ import lombok.NonNull;
 import org.springframework.data.annotation.Id;
 
 @Data
-public class RestaurantInformation {
+public class AggregateReviewInformation {
     @Id
     @NonNull
     private final String restaurantId;
