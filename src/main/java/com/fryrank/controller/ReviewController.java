@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class ReviewController {
 
     private static final String REVIEWS_URI = API_PATH + "/reviews";
-    private static final String AGGREGATE_REVIEWS_URI = API_PATH + "/reviews/aggregateInformation";
+    private static final String AGGREGATE_REVIEWS_URI = REVIEWS_URI + "/aggregateInformation";
 
     @Autowired
     private ReviewDAL reviewDAL;

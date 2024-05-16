@@ -45,25 +45,22 @@ public class ReviewDALImpl implements ReviewDAL {
 
         Map<String, AggregateReviewInformation> restaurantIdToAggregateReviewInformation = new HashMap<String, AggregateReviewInformation>();
 
-        for(String restaurantId : restaurantIds) {
+        restaurantIds.stream().forEach(restaurantId -> {
             final Criteria includeRestaurantIdsCriteria = Criteria.where(RESTAURANT_ID_KEY).is(restaurantId);
             final MatchOperation filterToRestaurantId = match(includeRestaurantIdsCriteria);
             final GroupOperation averageScoreGroupOperation = group(RESTAURANT_ID_KEY).avg("score").as("avgScore");
             final Aggregation aggregation = newAggregation(filterToRestaurantId, averageScoreGroupOperation);
-            final AggregationResults<RestaurantAvgScore> result = mongoTemplate.aggregate(aggregation, "review", RestaurantAvgScore.class);
-            final Optional<RestaurantAvgScore> uniqueResult = Optional.ofNullable(result.getUniqueMappedResult());
+            final AggregationResults<AggregateReviewInformation> result = mongoTemplate.aggregate(aggregation, "review", AggregateReviewInformation.class);
+            final Optional<AggregateReviewInformation> uniqueResult = Optional.ofNullable(result.getUniqueMappedResult());
 
             if (uniqueResult.isPresent()) {
-                Float averageScore = null;
-
-                if(aggregateReviewFilter.getIncludeRating()) {
-                    final Float rawScore = uniqueResult.get().getAvgScore();
-                    averageScore = new BigDecimal(rawScore).setScale(1, RoundingMode.DOWN).floatValue();
-                }
+                final Float averageScore = aggregateReviewFilter.getIncludeRating()
+                    ? BigDecimal.valueOf(uniqueResult.get().getAvgScore()).setScale(1, RoundingMode.DOWN).floatValue()
+                    : null;
 
                 restaurantIdToAggregateReviewInformation.put(restaurantId, new AggregateReviewInformation(restaurantId, averageScore));
             }
-        }
+        });
 
         return new GetAggregateReviewInformationOutput(restaurantIdToAggregateReviewInformation);
     }
