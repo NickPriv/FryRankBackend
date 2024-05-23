@@ -45,22 +45,22 @@ public class ReviewDALImpl implements ReviewDAL {
 
         Map<String, AggregateReviewInformation> restaurantIdToAggregateReviewInformation = new HashMap<String, AggregateReviewInformation>();
 
-        restaurantIds.stream().forEach(restaurantId -> {
-            final Criteria includeRestaurantIdsCriteria = Criteria.where(RESTAURANT_ID_KEY).is(restaurantId);
-            final MatchOperation filterToRestaurantId = match(includeRestaurantIdsCriteria);
-            final GroupOperation averageScoreGroupOperation = group(RESTAURANT_ID_KEY).avg("score").as("avgScore");
-            final Aggregation aggregation = newAggregation(filterToRestaurantId, averageScoreGroupOperation);
-            final AggregationResults<AggregateReviewInformation> result = mongoTemplate.aggregate(aggregation, "review", AggregateReviewInformation.class);
-            final Optional<AggregateReviewInformation> uniqueResult = Optional.ofNullable(result.getUniqueMappedResult());
+        final Criteria includeRestaurantIdsCriteria = Criteria.where(RESTAURANT_ID_KEY).in(restaurantIds);
+        final MatchOperation filterToRestaurantId = match(includeRestaurantIdsCriteria);
+        final GroupOperation averageScoreGroupOperation = group(RESTAURANT_ID_KEY).avg("score").as("avgScore");
+        final Aggregation aggregation = newAggregation(filterToRestaurantId, averageScoreGroupOperation);
+        final AggregationResults<AggregateReviewInformation> result = mongoTemplate.aggregate(aggregation, "review", AggregateReviewInformation.class);
+        final List<AggregateReviewInformation> aggregateReviewInformationList = result.getMappedResults();
 
-            if (uniqueResult.isPresent()) {
-                final Float averageScore = aggregateReviewFilter.getIncludeRating()
-                    ? BigDecimal.valueOf(uniqueResult.get().getAvgScore()).setScale(1, RoundingMode.DOWN).floatValue()
-                    : null;
+        aggregateReviewInformationList.stream().forEach(
+                aggregateReviewInformation -> {
+                    final Float averageScore = aggregateReviewFilter.getIncludeRating()
+                            ? BigDecimal.valueOf(aggregateReviewInformation.getAvgScore()).setScale(1, RoundingMode.DOWN).floatValue()
+                            : null;
 
-                restaurantIdToAggregateReviewInformation.put(restaurantId, new AggregateReviewInformation(restaurantId, averageScore));
-            }
-        });
+                    restaurantIdToAggregateReviewInformation.put(aggregateReviewInformation.getRestaurantId(), new AggregateReviewInformation(aggregateReviewInformation.getRestaurantId(), averageScore));
+                }
+        );
 
         return new GetAggregateReviewInformationOutput(restaurantIdToAggregateReviewInformation);
     }
