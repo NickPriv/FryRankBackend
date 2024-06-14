@@ -19,7 +19,13 @@ public class FryRankApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("https://pure-temple-61679-98a4d5c2d04e.herokuapp.com", "http://localhost:3000");
+				registry.addMapping("/**").allowedOrigins(
+						"https://pure-temple-61679-98a4d5c2d04e.herokuapp.com",
+						"http://pure-temple-61679-98a4d5c2d04e.herokuapp.com",
+						"http://localhost:3000",
+						"https://fryrank.oxyserver.com",
+						"http://fryrank.oxyserver.com"
+				);
 			}
 		};
 	}
