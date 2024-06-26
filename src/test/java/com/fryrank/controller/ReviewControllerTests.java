@@ -2,6 +2,7 @@ package com.fryrank.controller;
 
 import com.fryrank.dal.ReviewDAL;
 import com.fryrank.model.*;
+import com.fryrank.validator.ValidatorException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,6 +22,7 @@ import static com.fryrank.TestConstants.TEST_REVIEWS;
 import static com.fryrank.TestConstants.TEST_REVIEW_1;
 import static com.fryrank.TestConstants.TEST_REVIEW_ID_1;
 import static com.fryrank.TestConstants.TEST_TITLE_1;
+import static com.fryrank.TestConstants.TEST_ISO_DATE_TIME_1;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -62,7 +64,7 @@ public class ReviewControllerTests {
 
     @Test
     public void testAddNewReviewNullReviewID() throws Exception {
-        Review expectedReview = new Review(null, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1);
+        Review expectedReview = new Review(null, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1);
 
         when(reviewDAL.addNewReview(expectedReview)).thenReturn(expectedReview);
 
@@ -73,35 +75,49 @@ public class ReviewControllerTests {
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullRestaurantID() throws Exception {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, null, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1);
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, null, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1);
 
         controller.addNewReviewForRestaurant(expectedReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullAuthorID() throws Exception {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, null, 5.0, TEST_TITLE_1, TEST_BODY_1);
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, null, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1);
 
         controller.addNewReviewForRestaurant(expectedReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullScore() throws Exception {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, null, TEST_TITLE_1, TEST_BODY_1);
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, null, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1);
 
         controller.addNewReviewForRestaurant(expectedReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullTitle() throws Exception {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, null, TEST_BODY_1);
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, null, TEST_BODY_1, TEST_ISO_DATE_TIME_1);
 
         controller.addNewReviewForRestaurant(expectedReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullBody() throws Exception {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, null);
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, null, TEST_ISO_DATE_TIME_1);
+
+        controller.addNewReviewForRestaurant(expectedReview);
+    }
+
+    @Test(expected = ValidatorException.class)
+    public void testAddNewNullISODateTime() throws Exception {
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, null);
+
+        controller.addNewReviewForRestaurant(expectedReview);
+    }
+
+    @Test(expected = ValidatorException.class)
+    public void testAddNewBadFormatISODateTime() throws Exception {
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, "not-a-real-date");
 
         controller.addNewReviewForRestaurant(expectedReview);
     }
