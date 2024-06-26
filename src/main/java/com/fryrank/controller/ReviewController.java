@@ -51,7 +51,7 @@ public class ReviewController {
         validator.validate(review, bindingResult);
 
         if(bindingResult.hasErrors()) {
-            throw new ValidatorException(bindingResult.getAllErrors(), "Encountered several errors while validating API input.");
+            throw new ValidatorException(bindingResult.getAllErrors(), "Encountered error while validating API input.");
         }
         return reviewDAL.addNewReview(review);
     }

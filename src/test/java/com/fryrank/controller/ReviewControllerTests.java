@@ -3,14 +3,15 @@ package com.fryrank.controller;
 import com.fryrank.dal.ReviewDAL;
 import com.fryrank.model.*;
 import com.fryrank.validator.ValidatorException;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ import static com.fryrank.TestConstants.TEST_REVIEW_ID_1;
 import static com.fryrank.TestConstants.TEST_TITLE_1;
 import static com.fryrank.TestConstants.TEST_ISO_DATE_TIME_1;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.when;
 
 
@@ -34,6 +36,9 @@ public class ReviewControllerTests {
 
     @InjectMocks
     ReviewController controller;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private static final String TEST_RESTAURANT_ID_1 = "ChIJl8BSSgfsj4ARi9qijghUAH0";
     private static final String TEST_RESTAURANT_ID_2 = "ChIJ1wHcROHNj4ARmNwmP2PcUWw";
@@ -108,11 +113,16 @@ public class ReviewControllerTests {
         controller.addNewReviewForRestaurant(expectedReview);
     }
 
-    @Test(expected = ValidatorException.class)
+    @Test
     public void testAddNewNullISODateTime() throws Exception {
         Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, null);
 
-        controller.addNewReviewForRestaurant(expectedReview);
+        ValidatorException exception = assertThrows(
+                ValidatorException.class, () -> controller.addNewReviewForRestaurant(expectedReview));
+
+        assertEquals("", exception.getMessage());
+
+        //controller.addNewReviewForRestaurant(expectedReview);
     }
 
     @Test(expected = ValidatorException.class)
