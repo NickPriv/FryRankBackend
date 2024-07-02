@@ -114,22 +114,34 @@ public class ReviewControllerTests {
     }
 
     @Test
-    public void testAddNewNullISODateTime() throws Exception {
+    public void testAddNewNullISODateTime() {
         Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, null);
 
         ValidatorException exception = assertThrows(
                 ValidatorException.class, () -> controller.addNewReviewForRestaurant(expectedReview));
 
-        assertEquals("", exception.getMessage());
-
-        //controller.addNewReviewForRestaurant(expectedReview);
+        assertEquals("Encountered error while validating API input.\n" +
+                    "Errors:\n\tField error in object 'review' on field 'isoDateTime': rejected value [null]; codes [field.required.review.isoDateTime,field.required.isoDateTime,field.required.java.lang.String,field.required]; arguments []; default message [null]\n",
+                exception.getErrorsString()
+        );
+        assertEquals("Encountered error while validating API input.",
+                exception.getMessage());
     }
 
-    @Test(expected = ValidatorException.class)
-    public void testAddNewBadFormatISODateTime() throws Exception {
+    @Test
+    public void testAddNewBadFormatISODateTime() {
         Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, "not-a-real-date");
 
-        controller.addNewReviewForRestaurant(expectedReview);
+        ValidatorException exception = assertThrows(
+                ValidatorException.class, () -> controller.addNewReviewForRestaurant(expectedReview));
+
+        assertEquals("Encountered error while validating API input.\n" +
+                        "Errors:\n" +
+                        "\tField error in object 'review' on field 'isoDateTime': rejected value [not-a-real-date]; codes [field.invalidFormat.review.isoDateTime,field.invalidFormat.isoDateTime,field.invalidFormat.java.lang.String,field.invalidFormat]; arguments []; default message [The provided isoDateTime is not in ISO format.]\n",
+                exception.getErrorsString()
+        );
+        assertEquals("Encountered error while validating API input.",
+                exception.getMessage());
     }
 
     // /api/reviews/aggregateInformation endpoint tests
