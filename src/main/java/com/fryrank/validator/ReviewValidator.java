@@ -6,7 +6,6 @@ import org.springframework.validation.Validator;
 
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 
 public class ReviewValidator implements Validator {
     public static final String ISO_DATE_TIME = "isoDateTime";
