@@ -1,5 +1,6 @@
 package com.fryrank.exception;
 
+import com.fryrank.validator.ValidatorException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,5 +32,11 @@ public class ControllerExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public Map<String, String> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         return Map.of("message", ex.getMessage());
+    }
+
+    @ExceptionHandler(ValidatorException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleValidatorException(ValidatorException ex) {
+        return Map.of("message", ex.getErrorsString());
     }
 }
