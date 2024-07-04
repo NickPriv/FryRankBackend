@@ -13,11 +13,13 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import static com.fryrank.Constants.API_PATH;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.fryrank.Constants.API_PATH;
+import static com.fryrank.Constants.GENERIC_VALIDATOR_ERROR_MESSAGE;
+import static com.fryrank.Constants.REVIEW_VALIDATOR_ERRORS_OBJECT_NAME;
 
 @RestController
 public class ReviewController {
@@ -45,12 +47,12 @@ public class ReviewController {
 
     @PostMapping(value = REVIEWS_URI)
     public Review addNewReviewForRestaurant(@RequestBody @NonNull final Review review) throws ValidatorException {
-        BindingResult bindingResult = new BeanPropertyBindingResult(review, "review");
+        BindingResult bindingResult = new BeanPropertyBindingResult(review, REVIEW_VALIDATOR_ERRORS_OBJECT_NAME);
         ReviewValidator validator = new ReviewValidator();
         validator.validate(review, bindingResult);
 
         if(bindingResult.hasErrors()) {
-            throw new ValidatorException(bindingResult.getAllErrors(), "Encountered error while validating API input.");
+            throw new ValidatorException(bindingResult.getAllErrors(), GENERIC_VALIDATOR_ERROR_MESSAGE);
         }
         return reviewDAL.addNewReview(review);
     }

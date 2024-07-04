@@ -8,6 +8,8 @@ import java.util.List;
 public class TestConstants {
 
     public static final String TEST_RESTAURANT_ID = "1";
+    public static final String TEST_RESTAURANT_ID_1 = "ChIJl8BSSgfsj4ARi9qijghUAH0";
+    public static final String TEST_RESTAURANT_ID_2 = "ChIJ1wHcROHNj4ARmNwmP2PcUWw";
     public static final String TEST_REVIEW_ID_1 = "review_id_1";
     public static final String TEST_REVIEW_ID_2 = "review_id_2";
     public static final String TEST_AUTHOR_ID_1 = "author_id_1";
@@ -20,6 +22,10 @@ public class TestConstants {
     public static final String TEST_ISO_DATE_TIME_1 = "1970-01-01T00:00:00Z";
 
     public static final Review TEST_REVIEW_1 = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID, TEST_AUTHOR_ID_1, 5.0 , TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1);
+
+    public static final Review TEST_REVIEW_NULL_ISO_DATETIME = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, null);
+
+    public static final Review TEST_REVIEW_BAD_ISO_DATETIME = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, "not-a-real-date");
 
     public static final List<Review> TEST_REVIEWS = new ArrayList<>() {
         {
