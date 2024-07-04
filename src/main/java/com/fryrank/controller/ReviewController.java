@@ -17,7 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.fryrank.Constants.*;
+import static com.fryrank.Constants.API_PATH;
+import static com.fryrank.Constants.GENERIC_VALIDATOR_ERROR_MESSAGE;
+import static com.fryrank.Constants.REVIEW_VALIDATOR_ERRORS_OBJECT_NAME;
 
 @RestController
 public class ReviewController {
