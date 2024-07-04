@@ -17,13 +17,16 @@ import java.util.stream.Collectors;
 import static com.fryrank.TestConstants.TEST_AUTHOR_ID_1;
 import static com.fryrank.TestConstants.TEST_BODY_1;
 import static com.fryrank.TestConstants.TEST_RESTAURANT_ID;
+import static com.fryrank.TestConstants.TEST_RESTAURANT_ID_1;
+import static com.fryrank.TestConstants.TEST_RESTAURANT_ID_2;
 import static com.fryrank.TestConstants.TEST_REVIEWS;
 import static com.fryrank.TestConstants.TEST_REVIEW_1;
+import static com.fryrank.TestConstants.TEST_REVIEW_BAD_ISO_DATETIME;
+import static com.fryrank.TestConstants.TEST_REVIEW_NULL_ISO_DATETIME;
 import static com.fryrank.TestConstants.TEST_REVIEW_ID_1;
 import static com.fryrank.TestConstants.TEST_TITLE_1;
 import static com.fryrank.TestConstants.TEST_ISO_DATE_TIME_1;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.when;
 
 
@@ -34,9 +37,6 @@ public class ReviewControllerTests {
 
     @InjectMocks
     ReviewController controller;
-
-    private static final String TEST_RESTAURANT_ID_1 = "ChIJl8BSSgfsj4ARi9qijghUAH0";
-    private static final String TEST_RESTAURANT_ID_2 = "ChIJ1wHcROHNj4ARmNwmP2PcUWw";
 
     // /api/reviews endpoint tests
     @Test
@@ -108,35 +108,14 @@ public class ReviewControllerTests {
         controller.addNewReviewForRestaurant(expectedReview);
     }
 
-    @Test
-    public void testAddNewReviewNullISODateTime() {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, null);
-
-        ValidatorException exception = assertThrows(
-                ValidatorException.class, () -> controller.addNewReviewForRestaurant(expectedReview));
-
-        assertEquals("Encountered error while validating API input.\n" +
-                    "Errors:\n\tField error in object 'review' on field 'isoDateTime': rejected value [null]; codes [field.required.review.isoDateTime,field.required.isoDateTime,field.required.java.lang.String,field.required]; arguments []; default message [null]\n",
-                exception.getErrorsString()
-        );
-        assertEquals("Encountered error while validating API input.",
-                exception.getMessage());
+    @Test(expected = ValidatorException.class)
+    public void testAddNewReviewNullISODateTime() throws Exception {
+        controller.addNewReviewForRestaurant(TEST_REVIEW_NULL_ISO_DATETIME);
     }
 
-    @Test
-    public void testAddNewBadFormatISODateTime() {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, "not-a-real-date");
-
-        ValidatorException exception = assertThrows(
-                ValidatorException.class, () -> controller.addNewReviewForRestaurant(expectedReview));
-
-        assertEquals("Encountered error while validating API input.\n" +
-                        "Errors:\n" +
-                        "\tField error in object 'review' on field 'isoDateTime': rejected value [not-a-real-date]; codes [field.invalidFormat.review.isoDateTime,field.invalidFormat.isoDateTime,field.invalidFormat.java.lang.String,field.invalidFormat]; arguments []; default message [The provided isoDateTime is not in ISO format.]\n",
-                exception.getErrorsString()
-        );
-        assertEquals("Encountered error while validating API input.",
-                exception.getMessage());
+    @Test(expected = ValidatorException.class)
+    public void testAddNewBadFormatISODateTime() throws Exception {
+        controller.addNewReviewForRestaurant(TEST_REVIEW_BAD_ISO_DATETIME);
     }
 
     // /api/reviews/aggregateInformation endpoint tests
