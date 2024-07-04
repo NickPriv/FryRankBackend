@@ -5,8 +5,12 @@ import com.fryrank.model.AggregateReviewFilter;
 import com.fryrank.model.GetAggregateReviewInformationOutput;
 import com.fryrank.model.GetAllReviewsOutput;
 import com.fryrank.model.Review;
+import com.fryrank.validator.ReviewValidator;
+import com.fryrank.validator.ValidatorException;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import static com.fryrank.Constants.API_PATH;
@@ -40,7 +44,14 @@ public class ReviewController {
     }
 
     @PostMapping(value = REVIEWS_URI)
-    public Review addNewReviewForRestaurant(@RequestBody @NonNull final Review review) {
+    public Review addNewReviewForRestaurant(@RequestBody @NonNull final Review review) throws ValidatorException {
+        BindingResult bindingResult = new BeanPropertyBindingResult(review, "review");
+        ReviewValidator validator = new ReviewValidator();
+        validator.validate(review, bindingResult);
+
+        if(bindingResult.hasErrors()) {
+            throw new ValidatorException(bindingResult.getAllErrors(), "Encountered error while validating API input.");
+        }
         return reviewDAL.addNewReview(review);
     }
 }

@@ -26,4 +26,6 @@ public class Review {
     @NonNull
     private final String body;
 
+    private final String isoDateTime;
+
 }
