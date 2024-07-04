@@ -1,5 +1,6 @@
 package com.fryrank.validator;
 
+import lombok.NonNull;
 import org.springframework.validation.Errors;
 import com.fryrank.model.Review;
 import org.springframework.validation.Validator;
@@ -13,12 +14,12 @@ public class ReviewValidator implements Validator {
     public static final String ISO_DATE_TIME_REJECTION_FORMAT_CODE = "field.invalidFormat";
     public static final String ISO_DATE_TIME_REJECTION_FORMAT_REASON = "The provided isoDateTime is not in ISO format.";
     @Override
-    public boolean supports(Class clazz) {
+    public boolean supports(@NonNull Class clazz) {
         return Review.class.isAssignableFrom(clazz);
     }
 
     @Override
-    public void validate(Object target, Errors errors) {
+    public void validate(@NonNull Object target, @NonNull Errors errors) {
         Review review = (Review) target;
         String isoDateTime = review.getIsoDateTime();
         if(isoDateTime == null) {

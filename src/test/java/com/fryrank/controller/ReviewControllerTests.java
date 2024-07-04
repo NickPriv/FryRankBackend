@@ -3,9 +3,7 @@ package com.fryrank.controller;
 import com.fryrank.dal.ReviewDAL;
 import com.fryrank.model.*;
 import com.fryrank.validator.ValidatorException;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,9 +34,6 @@ public class ReviewControllerTests {
 
     @InjectMocks
     ReviewController controller;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     private static final String TEST_RESTAURANT_ID_1 = "ChIJl8BSSgfsj4ARi9qijghUAH0";
     private static final String TEST_RESTAURANT_ID_2 = "ChIJ1wHcROHNj4ARmNwmP2PcUWw";
@@ -114,7 +109,7 @@ public class ReviewControllerTests {
     }
 
     @Test
-    public void testAddNewNullISODateTime() {
+    public void testAddNewReviewNullISODateTime() {
         Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, null);
 
         ValidatorException exception = assertThrows(
