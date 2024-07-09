@@ -28,4 +28,6 @@ public class Review {
 
     private final String isoDateTime;
 
+    private final String accountId;
+
 }
