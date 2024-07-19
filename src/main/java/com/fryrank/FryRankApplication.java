@@ -20,11 +20,18 @@ public class FryRankApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**").allowedOrigins(
+						// Prod URLs
 						"https://pure-temple-61679-98a4d5c2d04e.herokuapp.com",
 						"http://pure-temple-61679-98a4d5c2d04e.herokuapp.com",
-						"http://localhost:3000",
 						"https://fryrank.oxyserver.com",
-						"http://fryrank.oxyserver.com"
+						"http://fryrank.oxyserver.com",
+						// Stage URLs
+						"https://pure-temple-61679-beta-stage-84eefac76015.herokuapp.com",
+						"http://pure-temple-61679-beta-stage-84eefac76015.herokuapp.com",
+						"https://fryrank-beta-stage.oxyserver.com",
+						"http://fryrank-beta-stage.oxyserver.com",
+						// Local Dev Testing URL
+						"http://localhost:3000"
 				);
 			}
 		};
