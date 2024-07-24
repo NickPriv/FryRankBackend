@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.mongodb.core.FindAndReplaceOptions;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
@@ -18,6 +19,8 @@ import static com.fryrank.TestConstants.TEST_REVIEW_1;
 import static com.fryrank.dal.ReviewDALImpl.RESTAURANT_ID_KEY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -61,6 +64,8 @@ public class ReviewDALTests {
 
     @Test
     public void testAddNewReview() throws Exception {
+        when(mongoTemplate.findAndReplace(any(Query.class), eq(TEST_REVIEW_1), any(FindAndReplaceOptions.class))).thenReturn(TEST_REVIEW_1);
+
         final Review expectedReview = TEST_REVIEW_1;
         final Review actualReview = reviewDAL.addNewReview(expectedReview);
         assertEquals(expectedReview, actualReview);
