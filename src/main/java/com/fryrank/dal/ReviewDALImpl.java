@@ -3,6 +3,7 @@ package com.fryrank.dal;
 import com.fryrank.model.*;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.FindAndReplaceOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -17,7 +18,6 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
@@ -67,7 +67,10 @@ public class ReviewDALImpl implements ReviewDAL {
 
     @Override
     public Review addNewReview(@NonNull final Review review) {
-        mongoTemplate.save(review);
-        return review;
+        final Query query = new Query().addCriteria(Criteria.where("_id").is(review.getRestaurantId() + ":" + review.getAccountId()));
+        final FindAndReplaceOptions options = new FindAndReplaceOptions();
+        options.upsert();
+
+        return mongoTemplate.findAndReplace(query, review, options);
     }
 }
