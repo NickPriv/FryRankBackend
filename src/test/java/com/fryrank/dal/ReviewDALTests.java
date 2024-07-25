@@ -13,9 +13,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.List;
 
+import static com.fryrank.TestConstants.TEST_ACCOUNT_ID;
 import static com.fryrank.TestConstants.TEST_RESTAURANT_ID;
 import static com.fryrank.TestConstants.TEST_REVIEWS;
 import static com.fryrank.TestConstants.TEST_REVIEW_1;
+import static com.fryrank.dal.ReviewDALImpl.ACCOUNT_ID_KEY;
 import static com.fryrank.dal.ReviewDALImpl.RESTAURANT_ID_KEY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,6 +62,36 @@ public class ReviewDALTests {
     @Test
     public void testGetAllReviewsByRestaurantId_nullRestaurantId() {
         assertThrows(NullPointerException.class, () -> reviewDAL.getAllReviewsByRestaurantId(null));
+    }
+
+    @Test
+    public void testGetAllReviewsByAccountId_happyPath() throws Exception {
+        final Query query = new Query();
+        query.addCriteria(where(ACCOUNT_ID_KEY).is(TEST_ACCOUNT_ID));
+
+        when(mongoTemplate.find(query, Review.class)).thenReturn(TEST_REVIEWS);
+
+        final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(TEST_REVIEWS);
+        final GetAllReviewsOutput actualOutput = reviewDAL.getAllReviewsByAccountId(TEST_ACCOUNT_ID);
+        assertEquals(actualOutput, expectedOutput);
+    }
+
+    @Test
+    public void testGetAllReviewsByAccountId_noReviews() throws Exception {
+        final Query query = new Query();
+        query.addCriteria(where(ACCOUNT_ID_KEY).is(TEST_ACCOUNT_ID));
+
+        final List<Review> expectedReviews = List.of();
+        when(mongoTemplate.find(query, Review.class)).thenReturn(expectedReviews);
+
+        final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(expectedReviews);
+        final GetAllReviewsOutput actualOutput = reviewDAL.getAllReviewsByAccountId(TEST_ACCOUNT_ID);
+        assertEquals(actualOutput, expectedOutput);
+    }
+
+    @Test
+    public void testGetAllReviewsByAccountId_nullAccountId() {
+        assertThrows(NullPointerException.class, () -> reviewDAL.getAllReviewsByAccountId(null));
     }
 
     @Test
