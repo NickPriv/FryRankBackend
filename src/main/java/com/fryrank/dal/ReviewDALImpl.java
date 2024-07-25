@@ -25,6 +25,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 public class ReviewDALImpl implements ReviewDAL {
 
     public static final String RESTAURANT_ID_KEY = "restaurantId";
+    public static final String ACCOUNT_ID_KEY = "accountId";
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -34,6 +35,16 @@ public class ReviewDALImpl implements ReviewDAL {
         final Query query = new Query();
         final Criteria equalToRestaurantIdCriteria = Criteria.where(RESTAURANT_ID_KEY).is(restaurantId);
         query.addCriteria(equalToRestaurantIdCriteria);
+        final List<Review> reviews = mongoTemplate.find(query, Review.class);
+
+        return new GetAllReviewsOutput(reviews);
+    }
+
+    @Override
+    public GetAllReviewsOutput getAllReviewsByAccountId(@NonNull final String accountId) {
+        final Query query = new Query();
+        final Criteria equalToAccountIdCriteria = Criteria.where(ACCOUNT_ID_KEY).is(accountId);
+        query.addCriteria(equalToAccountIdCriteria);
         final List<Review> reviews = mongoTemplate.find(query, Review.class);
 
         return new GetAllReviewsOutput(reviews);

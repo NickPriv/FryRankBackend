@@ -29,6 +29,7 @@ import static com.fryrank.TestConstants.TEST_REVIEW_ID_1;
 import static com.fryrank.TestConstants.TEST_TITLE_1;
 import static com.fryrank.TestConstants.TEST_ISO_DATE_TIME_1;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.when;
 
 
@@ -46,8 +47,22 @@ public class ReviewControllerTests {
         final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(TEST_REVIEWS);
         when(reviewDAL.getAllReviewsByRestaurantId(TEST_RESTAURANT_ID)).thenReturn(expectedOutput);
 
-        final GetAllReviewsOutput actualOutput = controller.getAllReviewsForRestaurant(TEST_RESTAURANT_ID);
+        final GetAllReviewsOutput actualOutput = controller.getAllReviews(TEST_RESTAURANT_ID, null);
         assertEquals(expectedOutput, actualOutput);
+    }
+
+    @Test
+    public void testGetAllReviewsForAccount() throws Exception {
+        final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(TEST_REVIEWS);
+        when(reviewDAL.getAllReviewsByAccountId(TEST_ACCOUNT_ID)).thenReturn(expectedOutput);
+
+        final GetAllReviewsOutput actualOutput = controller.getAllReviews(null, TEST_ACCOUNT_ID);
+        assertEquals(expectedOutput, actualOutput);
+    }
+
+    @Test
+    public void testGetAllReviewsNoParameter() throws Exception {
+        assertThrows(NullPointerException.class, () -> controller.getAllReviews(null, null));
     }
 
     @Test

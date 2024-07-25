@@ -31,8 +31,16 @@ public class ReviewController {
     private ReviewDAL reviewDAL;
 
     @GetMapping(value = REVIEWS_URI)
-    public GetAllReviewsOutput getAllReviewsForRestaurant(@RequestParam("restaurantId") @NonNull final String restaurantId) {
-        return reviewDAL.getAllReviewsByRestaurantId(restaurantId);
+    public GetAllReviewsOutput getAllReviews(
+        @RequestParam(required = false) final String restaurantId,
+        @RequestParam(required = false) final String accountId) {
+        if (restaurantId != null) {
+            return reviewDAL.getAllReviewsByRestaurantId(restaurantId);
+        } else if (accountId != null) {
+            return reviewDAL.getAllReviewsByAccountId(accountId);
+        } else {
+            throw new NullPointerException("At least one of restaurantId and accountId must not be null.");
+        }
     }
 
     @GetMapping(value = AGGREGATE_REVIEWS_URI)
