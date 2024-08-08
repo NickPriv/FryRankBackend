@@ -10,10 +10,11 @@ import org.springframework.validation.ObjectError;
 
 import java.util.List;
 
+import static com.fryrank.Constants.REJECTION_FORMAT_CODE;
+import static com.fryrank.Constants.REJECTION_REQUIRED_CODE;
 import static com.fryrank.Constants.REVIEW_VALIDATOR_ERRORS_OBJECT_NAME;
+
 import static com.fryrank.TestConstants.*;
-import static com.fryrank.validator.ReviewValidator.ISO_DATE_TIME_REJECTION_FORMAT_CODE;
-import static com.fryrank.validator.ReviewValidator.REJECTION_REQUIRED_CODE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ValidatorTests {
@@ -47,7 +48,7 @@ public class ValidatorTests {
         Assert.assertTrue(errors.hasErrors());
         List<ObjectError> allErrors = errors.getAllErrors();
         Assert.assertEquals(1, allErrors.size());
-        Assert.assertEquals(allErrors.get(0).getCode(), ISO_DATE_TIME_REJECTION_FORMAT_CODE);
+        Assert.assertEquals(allErrors.get(0).getCode(), REJECTION_FORMAT_CODE);
     }
 
     @Test
