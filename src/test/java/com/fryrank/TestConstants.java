@@ -1,6 +1,7 @@
 package com.fryrank;
 
 import com.fryrank.model.Review;
+import com.fryrank.model.UserMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ public class TestConstants {
     public static final String TEST_ISO_DATE_TIME_1 = "1970-01-01T00:00:00Z";
 
     public static final String TEST_ACCOUNT_ID = "test_account_id";
+
+    public static final String TEST_USERNAME = "testflush";
 
     public static final Review TEST_REVIEW_1 = new Review(
         TEST_REVIEW_ID_1,
@@ -80,6 +83,17 @@ public class TestConstants {
                 TEST_ISO_DATE_TIME_1,
                 TEST_ACCOUNT_ID)
             );
+        }
+    };
+
+    public static final UserMetadata TEST_USER_METADATA_1 = new UserMetadata(
+        TEST_ACCOUNT_ID,
+        TEST_USERNAME
+    );
+
+    public static final List<UserMetadata> TEST_USER_METADATA_LIST = new ArrayList<>() {
+        {
+            add(new UserMetadata(TEST_ACCOUNT_ID, TEST_USERNAME));
         }
     };
 }
