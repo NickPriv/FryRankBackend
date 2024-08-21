@@ -61,7 +61,6 @@ public class UserMetadataDALTests {
         query.addCriteria(where(ACCOUNT_ID_KEY).is(null));
 
         final List<UserMetadata> expectedUserMetadata = List.of();
-        when(mongoTemplate.find(query, UserMetadata.class)).thenReturn(expectedUserMetadata);
 
         final GetUserMetadataOutput expectedOutput = new GetUserMetadataOutput(expectedUserMetadata);
         final GetUserMetadataOutput actualOutput = userMetadataDAL.getUserMetadataForAccountId(TEST_ACCOUNT_ID);
