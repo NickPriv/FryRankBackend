@@ -2,6 +2,7 @@ package com.fryrank.controller;
 
 import com.fryrank.dal.UserMetadataDAL;
 import com.fryrank.model.UserMetadata;
+import com.fryrank.model.UserMetadataOutput;
 import com.fryrank.validator.UserMetadataValidator;
 import com.fryrank.validator.ValidatorException;
 import lombok.NonNull;
@@ -26,7 +27,7 @@ public class UserMetadataController {
     private UserMetadataDAL userMetadataDAL;
 
     @PostMapping(value=USER_METADATA_URI)
-    public UserMetadata upsertUserMetadata(@RequestBody @NonNull final UserMetadata userMetadata) throws ValidatorException {
+    public UserMetadataOutput upsertUserMetadata(@RequestBody @NonNull final UserMetadata userMetadata) throws ValidatorException {
         BindingResult bindingResult = new BeanPropertyBindingResult(userMetadata, USER_METADATA_VALIDATOR_ERRORS_OBJECT_NAME);
         UserMetadataValidator validator = new UserMetadataValidator();
         validator.validate(userMetadata, bindingResult);
@@ -38,7 +39,7 @@ public class UserMetadataController {
     }
 
     @GetMapping(value=USER_METADATA_URI)
-    public UserMetadata getUserMetadata(@RequestParam final String accountId) {
+    public UserMetadataOutput getUserMetadata(@RequestParam final String accountId) {
         return userMetadataDAL.getUserMetadataForAccountId(accountId);
     }
 }

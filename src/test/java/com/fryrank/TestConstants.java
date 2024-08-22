@@ -2,6 +2,7 @@ package com.fryrank;
 
 import com.fryrank.model.Review;
 import com.fryrank.model.UserMetadata;
+import com.fryrank.model.UserMetadataOutput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +93,11 @@ public class TestConstants {
         TEST_USERNAME
     );
 
-    public static final UserMetadata TEST_USER_METADATA_EMPTY = new UserMetadata(null, null);
+    public static final UserMetadataOutput TEST_USER_METADATA_OUTPUT_1 = new UserMetadataOutput(
+            TEST_USERNAME
+    );
+
+    public static final UserMetadataOutput TEST_USER_METADATA_OUTPUT_EMPTY = new UserMetadataOutput(null);
 
     public static final List<UserMetadata> TEST_USER_METADATA_LIST = new ArrayList<>() {
         {

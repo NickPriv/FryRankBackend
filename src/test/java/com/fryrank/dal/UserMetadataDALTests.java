@@ -1,5 +1,6 @@
 package com.fryrank.dal;
 import com.fryrank.model.UserMetadata;
+import com.fryrank.model.UserMetadataOutput;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,8 +16,9 @@ import static com.fryrank.Constants.ACCOUNT_ID_KEY;
 import static com.fryrank.TestConstants.TEST_ACCOUNT_ID;
 import static com.fryrank.TestConstants.TEST_ACCOUNT_ID_NO_USER_METADATA;
 import static com.fryrank.TestConstants.TEST_USER_METADATA_1;
-import static com.fryrank.TestConstants.TEST_USER_METADATA_EMPTY;
 import static com.fryrank.TestConstants.TEST_USER_METADATA_LIST;
+import static com.fryrank.TestConstants.TEST_USER_METADATA_OUTPUT_1;
+import static com.fryrank.TestConstants.TEST_USER_METADATA_OUTPUT_EMPTY;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -38,8 +40,8 @@ public class UserMetadataDALTests {
 
         when(mongoTemplate.find(query, UserMetadata.class)).thenReturn(TEST_USER_METADATA_LIST);
 
-        final UserMetadata actualOutput = userMetadataDAL.getUserMetadataForAccountId(TEST_ACCOUNT_ID);
-        assertEquals(actualOutput, TEST_USER_METADATA_1);
+        final UserMetadataOutput actualOutput = userMetadataDAL.getUserMetadataForAccountId(TEST_ACCOUNT_ID);
+        assertEquals(actualOutput, TEST_USER_METADATA_OUTPUT_1);
     }
 
     @Test
@@ -50,8 +52,8 @@ public class UserMetadataDALTests {
         final List<UserMetadata> expectedUserMetadata = List.of();
         when(mongoTemplate.find(query, UserMetadata.class)).thenReturn(expectedUserMetadata);
 
-        final UserMetadata actualOutput = userMetadataDAL.getUserMetadataForAccountId(TEST_ACCOUNT_ID_NO_USER_METADATA);
-        assertEquals(actualOutput, TEST_USER_METADATA_EMPTY);
+        final UserMetadataOutput actualOutput = userMetadataDAL.getUserMetadataForAccountId(TEST_ACCOUNT_ID_NO_USER_METADATA);
+        assertEquals(actualOutput, TEST_USER_METADATA_OUTPUT_EMPTY);
     }
 
     @Test
@@ -59,16 +61,15 @@ public class UserMetadataDALTests {
         final Query query = new Query();
         query.addCriteria(where(ACCOUNT_ID_KEY).is(null));
 
-        final UserMetadata actualOutput = userMetadataDAL.getUserMetadataForAccountId(null);
-        assertEquals(actualOutput, TEST_USER_METADATA_EMPTY);
+        final UserMetadataOutput actualOutput = userMetadataDAL.getUserMetadataForAccountId(null);
+        assertEquals(actualOutput, TEST_USER_METADATA_OUTPUT_EMPTY);
     }
 
     @Test
     public void testUpsertUserMetadata() throws Exception {
         when(mongoTemplate.findAndReplace(any(Query.class), eq(TEST_USER_METADATA_1), any(FindAndReplaceOptions.class))).thenReturn(TEST_USER_METADATA_1);
 
-        final UserMetadata expectedUserMetadata = TEST_USER_METADATA_1;
-        final UserMetadata actualUserMetadata = userMetadataDAL.upsertUserMetadata(expectedUserMetadata);
-        assertEquals(expectedUserMetadata, actualUserMetadata);
+        final UserMetadataOutput actualUserMetadata = userMetadataDAL.upsertUserMetadata(TEST_USER_METADATA_1);
+        assertEquals(TEST_USER_METADATA_OUTPUT_1, actualUserMetadata);
     }
 }
