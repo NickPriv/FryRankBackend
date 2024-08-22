@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("user-metadata")
 @Data
 public class UserMetadata {
-    @Id
     private final String accountId;
 
     private final String username;

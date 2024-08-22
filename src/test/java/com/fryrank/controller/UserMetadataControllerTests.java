@@ -26,19 +26,35 @@ public class UserMetadataControllerTests {
     @Test
     public void testUpsertUserMetadata() throws Exception {
         when(userMetadataDAL.upsertUserMetadata(TEST_USER_METADATA_1)).thenReturn(TEST_USER_METADATA_1);
-        UserMetadata actualUserMetadata = userMetadataController.upsertUserMetadata(TEST_USER_METADATA_1);
+        final UserMetadata actualUserMetadata = userMetadataController.upsertUserMetadata(TEST_USER_METADATA_1);
         assertEquals(TEST_USER_METADATA_1, actualUserMetadata);
     }
 
     @Test(expected = ValidatorException.class)
     public void testUpsertUserMetadataForNullAccountId() throws Exception {
-        UserMetadata expectedUserMetadata = new UserMetadata(null, TEST_USERNAME);
+        final UserMetadata expectedUserMetadata = new UserMetadata(null, TEST_USERNAME);
         userMetadataController.upsertUserMetadata(expectedUserMetadata);
     }
 
     @Test(expected = ValidatorException.class)
     public void testUpsertUserMetadataForNullUsername() throws Exception {
-        UserMetadata expectedUserMetadata = new UserMetadata(TEST_ACCOUNT_ID, null);
+        final UserMetadata expectedUserMetadata = new UserMetadata(TEST_ACCOUNT_ID, null);
         userMetadataController.upsertUserMetadata(expectedUserMetadata);
+    }
+
+    @Test
+    public void testGetUserMetadata() throws Exception {
+        when(userMetadataDAL.getUserMetadataForAccountId(TEST_ACCOUNT_ID)).thenReturn(TEST_USER_METADATA_1);
+
+        final UserMetadata actualUserMetadata = userMetadataController.getUserMetadata(TEST_ACCOUNT_ID);
+        assertEquals(TEST_USER_METADATA_1, actualUserMetadata);
+    }
+
+    @Test
+    public void testGetUserMetadataNoAccountIdParameter() throws Exception {
+        when(userMetadataDAL.getUserMetadataForAccountId(null)).thenReturn(null);
+
+        final UserMetadata actualUserMetadata = userMetadataController.getUserMetadata(null);
+        assertEquals(null, actualUserMetadata);
     }
 }

@@ -1,7 +1,6 @@
 package com.fryrank.controller;
 
 import com.fryrank.dal.UserMetadataDAL;
-import com.fryrank.model.GetUserMetadataOutput;
 import com.fryrank.model.UserMetadata;
 import com.fryrank.validator.UserMetadataValidator;
 import com.fryrank.validator.ValidatorException;
@@ -39,7 +38,7 @@ public class UserMetadataController {
     }
 
     @GetMapping(value=USER_METADATA_URI)
-    public GetUserMetadataOutput getUserMetadata(@RequestParam final String accountId) {
+    public UserMetadata getUserMetadata(@RequestParam final String accountId) {
         return userMetadataDAL.getUserMetadataForAccountId(accountId);
     }
 }
