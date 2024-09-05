@@ -19,13 +19,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.fryrank.Constants.ACCOUNT_ID_KEY;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 @Repository
 public class ReviewDALImpl implements ReviewDAL {
 
     public static final String RESTAURANT_ID_KEY = "restaurantId";
-    public static final String ACCOUNT_ID_KEY = "accountId";
 
     @Autowired
     private MongoTemplate mongoTemplate;

@@ -17,7 +17,7 @@ import static com.fryrank.TestConstants.TEST_ACCOUNT_ID;
 import static com.fryrank.TestConstants.TEST_RESTAURANT_ID;
 import static com.fryrank.TestConstants.TEST_REVIEWS;
 import static com.fryrank.TestConstants.TEST_REVIEW_1;
-import static com.fryrank.dal.ReviewDALImpl.ACCOUNT_ID_KEY;
+import static com.fryrank.Constants.ACCOUNT_ID_KEY;
 import static com.fryrank.dal.ReviewDALImpl.RESTAURANT_ID_KEY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
