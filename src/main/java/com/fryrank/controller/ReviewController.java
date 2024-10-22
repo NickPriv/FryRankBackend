@@ -26,6 +26,7 @@ public class ReviewController {
 
     private static final String REVIEWS_URI = API_PATH + "/reviews";
     private static final String AGGREGATE_REVIEWS_URI = REVIEWS_URI + "/aggregateInformation";
+    private static final String REVIEWS_URI_TOP_10 = REVIEWS_URI + "/top10";
 
     @Autowired
     private ReviewDAL reviewDAL;
@@ -41,6 +42,11 @@ public class ReviewController {
         } else {
             throw new NullPointerException("At least one of restaurantId and accountId must not be null.");
         }
+    }
+
+    @GetMapping(value = REVIEWS_URI_TOP_10)
+    public GetAllReviewsOutput getReviewsTen() {
+        return reviewDAL.getTop10MostRecentReviews();
     }
 
     @GetMapping(value = AGGREGATE_REVIEWS_URI)

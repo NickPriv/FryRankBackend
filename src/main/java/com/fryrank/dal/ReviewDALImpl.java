@@ -3,6 +3,7 @@ package com.fryrank.dal;
 import com.fryrank.model.*;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndReplaceOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -49,6 +50,17 @@ public class ReviewDALImpl implements ReviewDAL {
 
         return new GetAllReviewsOutput(reviews);
     }
+
+    @Override
+    public GetAllReviewsOutput getTop10MostRecentReviews(){
+        final Query query= new Query();
+        query.with(Sort.by(Sort.Direction.DESC, "isoDateTime"));
+        query.limit(10);
+        final List<Review> reviews = mongoTemplate.find(query, Review.class);
+
+        return new GetAllReviewsOutput(reviews);
+    }
+
 
     @Override
     public GetAggregateReviewInformationOutput getAggregateReviewInformationForRestaurants(@NonNull final List<String> restaurantIds, @NonNull final AggregateReviewFilter aggregateReviewFilter) {
