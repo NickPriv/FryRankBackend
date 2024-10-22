@@ -61,7 +61,6 @@ public class ReviewDALImpl implements ReviewDAL {
         return new GetAllReviewsOutput(reviews);
     }
 
-
     @Override
     public GetAggregateReviewInformationOutput getAggregateReviewInformationForRestaurants(@NonNull final List<String> restaurantIds, @NonNull final AggregateReviewFilter aggregateReviewFilter) {
         final Query query = new Query().addCriteria(Criteria.where(RESTAURANT_ID_KEY).in(restaurantIds));
