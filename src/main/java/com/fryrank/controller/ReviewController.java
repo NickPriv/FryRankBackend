@@ -46,7 +46,7 @@ public class ReviewController {
 
     @GetMapping(value = REVIEWS_URI_TOP_10)
     public GetAllReviewsOutput getReviewsTen() {
-        return reviewDAL.getTop10MostRecentReviews();
+        return reviewDAL.getTopMostRecentReviews();
     }
 
     @GetMapping(value = AGGREGATE_REVIEWS_URI)
