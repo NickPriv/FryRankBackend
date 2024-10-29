@@ -45,7 +45,7 @@ public class ReviewController {
     }
 
     @GetMapping(value = REVIEWS_URI_TOP)
-    public GetAllReviewsOutput getReviewsTen(@RequestParam(required=false) final Integer count) {
+    public GetAllReviewsOutput getTopReviews(@RequestParam final Integer count) {
         return reviewDAL.getTopMostRecentReviews(count);
     }
 

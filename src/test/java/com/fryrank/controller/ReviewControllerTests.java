@@ -61,6 +61,16 @@ public class ReviewControllerTests {
     }
 
     @Test
+    public void testGetTopReviews() throws Exception {
+        int count=2;
+        final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(TEST_REVIEWS);
+        when(reviewDAL.getTopMostRecentReviews(count)).thenReturn(expectedOutput);
+
+        final GetAllReviewsOutput actualOutput = controller.getTopReviews(count);
+        assertEquals(expectedOutput.getSize(), actualOutput.getSize());
+    }
+
+    @Test
     public void testGetAllReviewsNoParameter() throws Exception {
         assertThrows(NullPointerException.class, () -> controller.getAllReviews(null, null));
     }
