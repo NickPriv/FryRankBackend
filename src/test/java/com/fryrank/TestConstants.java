@@ -28,6 +28,8 @@ public class TestConstants {
 
     public static final String TEST_USERNAME = "testflush";
 
+    public static final String ISO_DATE_TIME = "isoDateTime";
+
     public static final Review TEST_REVIEW_1 = new Review(
         TEST_REVIEW_ID_1,
         TEST_RESTAURANT_ID,
