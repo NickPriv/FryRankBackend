@@ -52,10 +52,10 @@ public class ReviewDALImpl implements ReviewDAL {
     }
 
     @Override
-    public GetAllReviewsOutput getTopMostRecentReviews(){
+    public GetAllReviewsOutput getTopMostRecentReviews(@NonNull final Integer count){
         final Query query= new Query();
         query.with(Sort.by(Sort.Direction.DESC, ISO_DATE_TIME));
-        query.limit(TOP_REVIEWS);
+        query.limit(count);
         final List<Review> reviews = mongoTemplate.find(query, Review.class);
 
         return new GetAllReviewsOutput(reviews);

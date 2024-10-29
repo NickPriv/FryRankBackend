@@ -26,7 +26,7 @@ public class ReviewController {
 
     private static final String REVIEWS_URI = API_PATH + "/reviews";
     private static final String AGGREGATE_REVIEWS_URI = REVIEWS_URI + "/aggregateInformation";
-    private static final String REVIEWS_URI_TOP_10 = REVIEWS_URI + "/top10";
+    private static final String REVIEWS_URI_TOP = REVIEWS_URI + "/top";
 
     @Autowired
     private ReviewDAL reviewDAL;
@@ -44,9 +44,9 @@ public class ReviewController {
         }
     }
 
-    @GetMapping(value = REVIEWS_URI_TOP_10)
-    public GetAllReviewsOutput getReviewsTen() {
-        return reviewDAL.getTopMostRecentReviews();
+    @GetMapping(value = REVIEWS_URI_TOP)
+    public GetAllReviewsOutput getReviewsTen(@RequestParam(required=false) final Integer count) {
+        return reviewDAL.getTopMostRecentReviews(count);
     }
 
     @GetMapping(value = AGGREGATE_REVIEWS_URI)
