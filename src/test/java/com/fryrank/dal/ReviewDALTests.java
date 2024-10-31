@@ -18,7 +18,7 @@ import static com.fryrank.TestConstants.TEST_ACCOUNT_ID;
 import static com.fryrank.TestConstants.TEST_RESTAURANT_ID;
 import static com.fryrank.TestConstants.TEST_REVIEWS;
 import static com.fryrank.TestConstants.TEST_REVIEW_1;
-import static com.fryrank.TestConstants.ISO_DATE_TIME;
+import static com.fryrank.Constants.ISO_DATE_TIME;
 import static com.fryrank.Constants.ACCOUNT_ID_KEY;
 import static com.fryrank.dal.ReviewDALImpl.RESTAURANT_ID_KEY;
 import static org.junit.Assert.assertEquals;
@@ -106,13 +106,12 @@ public class ReviewDALTests {
     }
 
     @Test public void testGetTopMostRecentReviews() throws Exception {
-        final int count = 2;
         final Query query = new Query();
         query.with(Sort.by(Sort.Direction.DESC, ISO_DATE_TIME));
-        query.limit(count);
+        query.limit(TEST_REVIEWS.size());
 
         when(mongoTemplate.find(query, Review.class)).thenReturn(TEST_REVIEWS);
-        final GetAllReviewsOutput actualOutput = reviewDAL.getTopMostRecentReviews(count);
-        assertEquals(2, actualOutput.getSize());
+        final GetAllReviewsOutput actualOutput = reviewDAL.getTopMostRecentReviews(TEST_REVIEWS.size());
+        assertEquals(TEST_REVIEWS.size(), actualOutput.getReviews().size());
     }
 }

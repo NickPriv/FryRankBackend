@@ -10,8 +10,4 @@ public class GetAllReviewsOutput {
 
     @NonNull
     private final List<Review> reviews;
-
-    public int getSize() {
-        return reviews.size();
-    }
 }
