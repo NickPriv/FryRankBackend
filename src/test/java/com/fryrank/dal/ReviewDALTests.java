@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndReplaceOptions;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -17,6 +18,7 @@ import static com.fryrank.TestConstants.TEST_ACCOUNT_ID;
 import static com.fryrank.TestConstants.TEST_RESTAURANT_ID;
 import static com.fryrank.TestConstants.TEST_REVIEWS;
 import static com.fryrank.TestConstants.TEST_REVIEW_1;
+import static com.fryrank.Constants.ISO_DATE_TIME;
 import static com.fryrank.Constants.ACCOUNT_ID_KEY;
 import static com.fryrank.dal.ReviewDALImpl.RESTAURANT_ID_KEY;
 import static org.junit.Assert.assertEquals;
@@ -101,5 +103,15 @@ public class ReviewDALTests {
         final Review expectedReview = TEST_REVIEW_1;
         final Review actualReview = reviewDAL.addNewReview(expectedReview);
         assertEquals(expectedReview, actualReview);
+    }
+
+    @Test public void testGetTopMostRecentReviews() throws Exception {
+        final Query query = new Query();
+        query.with(Sort.by(Sort.Direction.DESC, ISO_DATE_TIME));
+        query.limit(TEST_REVIEWS.size());
+
+        when(mongoTemplate.find(query, Review.class)).thenReturn(TEST_REVIEWS);
+        final GetAllReviewsOutput actualOutput = reviewDAL.getTopMostRecentReviews(TEST_REVIEWS.size());
+        assertEquals(TEST_REVIEWS.size(), actualOutput.getReviews().size());
     }
 }

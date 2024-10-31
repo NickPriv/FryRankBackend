@@ -3,6 +3,7 @@ package com.fryrank;
 public class Constants {
 
     public static final String API_PATH = "/api";
+    public static final String ISO_DATE_TIME = "isoDateTime";
 
     // Validator
     public static final String GENERIC_VALIDATOR_ERROR_MESSAGE = "Encountered error while validating API input.";

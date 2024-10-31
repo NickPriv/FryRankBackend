@@ -13,6 +13,8 @@ public interface ReviewDAL {
 
     GetAllReviewsOutput getAllReviewsByAccountId(final String accountId);
 
+    GetAllReviewsOutput getTopMostRecentReviews(final Integer count);
+
     GetAggregateReviewInformationOutput getAggregateReviewInformationForRestaurants(final List<String> restaurantIds, final AggregateReviewFilter aggregateReviewFilter);
 
     Review addNewReview(final Review review);

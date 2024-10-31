@@ -3,6 +3,7 @@ package com.fryrank.dal;
 import com.fryrank.model.*;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndReplaceOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.fryrank.Constants.ISO_DATE_TIME;
 import static com.fryrank.Constants.ACCOUNT_ID_KEY;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
@@ -45,6 +47,16 @@ public class ReviewDALImpl implements ReviewDAL {
         final Query query = new Query();
         final Criteria equalToAccountIdCriteria = Criteria.where(ACCOUNT_ID_KEY).is(accountId);
         query.addCriteria(equalToAccountIdCriteria);
+        final List<Review> reviews = mongoTemplate.find(query, Review.class);
+
+        return new GetAllReviewsOutput(reviews);
+    }
+
+    @Override
+    public GetAllReviewsOutput getTopMostRecentReviews(@NonNull final Integer count){
+        final Query query= new Query();
+        query.with(Sort.by(Sort.Direction.DESC, ISO_DATE_TIME));
+        query.limit(count);
         final List<Review> reviews = mongoTemplate.find(query, Review.class);
 
         return new GetAllReviewsOutput(reviews);

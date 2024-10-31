@@ -20,12 +20,9 @@ public class TestConstants {
     public static final String TEST_TITLE_2 = "title_2";
     public static final String TEST_BODY_1 = "body_1";
     public static final String TEST_BODY_2 = "body_2";
-
     public static final String TEST_ISO_DATE_TIME_1 = "1970-01-01T00:00:00Z";
-
     public static final String TEST_ACCOUNT_ID = "test_account_id";
     public static final String TEST_ACCOUNT_ID_NO_USER_METADATA = "test_account_id_no_user_metadata";
-
     public static final String TEST_USERNAME = "testflush";
 
     public static final Review TEST_REVIEW_1 = new Review(
