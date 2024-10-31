@@ -41,6 +41,7 @@ public class UserMetadataDALImpl implements UserMetadataDAL {
         final Query query = new Query().addCriteria(Criteria.where("_id").is(userMetadata.getAccountId()));
         final FindAndReplaceOptions options = new FindAndReplaceOptions();
         options.upsert();
+        options.returnNew();
 
         UserMetadata mongodbRecord =  mongoTemplate.findAndReplace(query, userMetadata, options);
         if(mongodbRecord == null) {
