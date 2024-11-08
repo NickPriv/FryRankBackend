@@ -11,10 +11,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static com.fryrank.TestConstants.TEST_ACCOUNT_ID;
+import static com.fryrank.TestConstants.TEST_DEFAULT_NAME;
 import static com.fryrank.TestConstants.TEST_USERNAME;
 import static com.fryrank.TestConstants.TEST_USER_METADATA_1;
 import static com.fryrank.TestConstants.TEST_USER_METADATA_OUTPUT_1;
 import static com.fryrank.TestConstants.TEST_USER_METADATA_OUTPUT_EMPTY;
+import static com.fryrank.TestConstants.TEST_USER_METADATA_OUTPUT_WITH_DEFAULT_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -43,6 +45,22 @@ public class UserMetadataControllerTests {
     public void testUpsertUserMetadataForNullUsername() throws Exception {
         final UserMetadata expectedUserMetadata = new UserMetadata(TEST_ACCOUNT_ID, null);
         userMetadataController.upsertUserMetadata(expectedUserMetadata);
+    }
+
+    @Test
+    public void testPutUserMetadata() throws Exception {
+        when(userMetadataDAL.putUserMetadataForAccountId(TEST_ACCOUNT_ID, TEST_DEFAULT_NAME)).thenReturn(TEST_USER_METADATA_OUTPUT_1);
+
+        final UserMetadataOutput actualUserMetadata = userMetadataController.putUserMetadata(TEST_ACCOUNT_ID, TEST_DEFAULT_NAME);
+        assertEquals(TEST_USER_METADATA_OUTPUT_1, actualUserMetadata);
+    }
+
+    @Test
+    public void testPutUserMetadataNoAccountIdParameter() throws Exception {
+        when(userMetadataDAL.putUserMetadataForAccountId(null, TEST_DEFAULT_NAME)).thenReturn(TEST_USER_METADATA_OUTPUT_WITH_DEFAULT_NAME);
+
+        final UserMetadataOutput actualUserMetadata = userMetadataController.putUserMetadata(null, TEST_DEFAULT_NAME);
+        assertEquals(TEST_USER_METADATA_OUTPUT_WITH_DEFAULT_NAME, actualUserMetadata);
     }
 
     @Test

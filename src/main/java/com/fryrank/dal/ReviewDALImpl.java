@@ -7,8 +7,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndReplaceOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -22,6 +24,10 @@ import java.util.Map;
 
 import static com.fryrank.Constants.ISO_DATE_TIME;
 import static com.fryrank.Constants.ACCOUNT_ID_KEY;
+import static com.fryrank.Constants.PRIMARY_KEY;
+import static com.fryrank.Constants.REVIEW_COLLECTION_NAME;
+import static com.fryrank.Constants.USER_METADATA_COLLECTION_NAME;
+import static com.fryrank.Constants.USER_METADATA_OUTPUT_FIELD_NAME;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 @Repository
@@ -34,22 +40,36 @@ public class ReviewDALImpl implements ReviewDAL {
 
     @Override
     public GetAllReviewsOutput getAllReviewsByRestaurantId(@NonNull final String restaurantId) {
-        final Query query = new Query();
         final Criteria equalToRestaurantIdCriteria = Criteria.where(RESTAURANT_ID_KEY).is(restaurantId);
-        query.addCriteria(equalToRestaurantIdCriteria);
-        final List<Review> reviews = mongoTemplate.find(query, Review.class);
+        final MatchOperation filterToRestaurantId = match(equalToRestaurantIdCriteria);
 
-        return new GetAllReviewsOutput(reviews);
+        LookupOperation lookup = LookupOperation.newLookup()
+                .from(USER_METADATA_COLLECTION_NAME)
+                .localField(ACCOUNT_ID_KEY)
+                .foreignField(PRIMARY_KEY)
+                .as(USER_METADATA_OUTPUT_FIELD_NAME);
+        AggregationOperation unwind = Aggregation.unwind("userMetadata");
+        final Aggregation aggregation = newAggregation(filterToRestaurantId, lookup, unwind);
+        final AggregationResults<Review> result = mongoTemplate.aggregate(aggregation, REVIEW_COLLECTION_NAME, Review.class);
+
+        return new GetAllReviewsOutput(result.getMappedResults());
     }
 
     @Override
     public GetAllReviewsOutput getAllReviewsByAccountId(@NonNull final String accountId) {
-        final Query query = new Query();
         final Criteria equalToAccountIdCriteria = Criteria.where(ACCOUNT_ID_KEY).is(accountId);
-        query.addCriteria(equalToAccountIdCriteria);
-        final List<Review> reviews = mongoTemplate.find(query, Review.class);
+        final MatchOperation filterToAccountId = match(equalToAccountIdCriteria);
 
-        return new GetAllReviewsOutput(reviews);
+        LookupOperation lookup = LookupOperation.newLookup()
+                .from(USER_METADATA_COLLECTION_NAME)
+                .localField(ACCOUNT_ID_KEY)
+                .foreignField(PRIMARY_KEY)
+                .as(USER_METADATA_OUTPUT_FIELD_NAME);
+        AggregationOperation unwind = Aggregation.unwind("userMetadata");
+        final Aggregation aggregation = newAggregation(filterToAccountId, lookup, unwind);
+        final AggregationResults<Review> result = mongoTemplate.aggregate(aggregation, REVIEW_COLLECTION_NAME, Review.class);
+
+        return new GetAllReviewsOutput(result.getMappedResults());
     }
 
     @Override
@@ -72,7 +92,7 @@ public class ReviewDALImpl implements ReviewDAL {
         final MatchOperation filterToRestaurantId = match(includeRestaurantIdsCriteria);
         final GroupOperation averageScoreGroupOperation = group(RESTAURANT_ID_KEY).avg("score").as("avgScore");
         final Aggregation aggregation = newAggregation(filterToRestaurantId, averageScoreGroupOperation);
-        final AggregationResults<AggregateReviewInformation> result = mongoTemplate.aggregate(aggregation, "review", AggregateReviewInformation.class);
+        final AggregationResults<AggregateReviewInformation> result = mongoTemplate.aggregate(aggregation, REVIEW_COLLECTION_NAME, AggregateReviewInformation.class);
         final List<AggregateReviewInformation> aggregateReviewInformationList = result.getMappedResults();
 
         aggregateReviewInformationList.stream().forEach(
