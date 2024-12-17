@@ -90,7 +90,7 @@ public class ReviewControllerTests {
 
     @Test
     public void testAddNewReviewNullReviewID() throws Exception {
-        Review expectedReview = new Review(null, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID);
+        Review expectedReview = new Review(null, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
 
         when(reviewDAL.addNewReview(expectedReview)).thenReturn(expectedReview);
 
@@ -101,35 +101,35 @@ public class ReviewControllerTests {
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullRestaurantID() throws Exception {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, null, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID);
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, null, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
 
         controller.addNewReviewForRestaurant(expectedReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullAuthorID() throws Exception {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, null, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID);
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, null, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
 
         controller.addNewReviewForRestaurant(expectedReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullScore() throws Exception {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, null, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID);
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, null, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
 
         controller.addNewReviewForRestaurant(expectedReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullTitle() throws Exception {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, null, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID);
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, null, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
 
         controller.addNewReviewForRestaurant(expectedReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullBody() throws Exception {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, null, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID);
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, TEST_AUTHOR_ID_1, 5.0, TEST_TITLE_1, null, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
 
         controller.addNewReviewForRestaurant(expectedReview);
     }

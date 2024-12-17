@@ -25,6 +25,15 @@ public class TestConstants {
     public static final String TEST_ACCOUNT_ID_NO_USER_METADATA = "test_account_id_no_user_metadata";
     public static final String TEST_USERNAME = "testflush";
 
+    public static final UserMetadata TEST_USER_METADATA_1 = new UserMetadata(
+        TEST_ACCOUNT_ID,
+        TEST_USERNAME
+    );
+
+    public static final UserMetadataOutput TEST_USER_METADATA_OUTPUT_1 = new UserMetadataOutput(
+        TEST_USERNAME
+    );
+
     public static final Review TEST_REVIEW_1 = new Review(
         TEST_REVIEW_ID_1,
         TEST_RESTAURANT_ID,
@@ -33,7 +42,8 @@ public class TestConstants {
         TEST_TITLE_1,
         TEST_BODY_1,
         TEST_ISO_DATE_TIME_1,
-        TEST_ACCOUNT_ID
+        TEST_ACCOUNT_ID,
+        null
     );
 
     public static final Review TEST_REVIEW_NULL_ISO_DATETIME = new Review(
@@ -44,7 +54,8 @@ public class TestConstants {
         TEST_TITLE_1,
         TEST_BODY_1,
         null,
-        TEST_ACCOUNT_ID
+        TEST_ACCOUNT_ID,
+        TEST_USER_METADATA_1
     );
 
     public static final Review TEST_REVIEW_BAD_ISO_DATETIME = new Review(
@@ -55,7 +66,8 @@ public class TestConstants {
         TEST_TITLE_1,
         TEST_BODY_1,
         "not-a-real-date",
-        TEST_ACCOUNT_ID
+        TEST_ACCOUNT_ID,
+        TEST_USER_METADATA_1
     );
 
     public static final Review TEST_REVIEW_NULL_ACCOUNT_ID = new Review(
@@ -66,7 +78,8 @@ public class TestConstants {
         TEST_TITLE_1,
         TEST_BODY_1,
         TEST_ISO_DATE_TIME_1,
-        null
+        null,
+        TEST_USER_METADATA_1
     );
 
     public static final List<Review> TEST_REVIEWS = new ArrayList<>() {
@@ -80,19 +93,14 @@ public class TestConstants {
                 TEST_TITLE_2,
                 TEST_BODY_2,
                 TEST_ISO_DATE_TIME_1,
-                TEST_ACCOUNT_ID)
+                TEST_ACCOUNT_ID,
+                TEST_USER_METADATA_1)
             );
         }
     };
 
-    public static final UserMetadata TEST_USER_METADATA_1 = new UserMetadata(
-        TEST_ACCOUNT_ID,
-        TEST_USERNAME
-    );
-
-    public static final UserMetadataOutput TEST_USER_METADATA_OUTPUT_1 = new UserMetadataOutput(
-            TEST_USERNAME
-    );
+    public static final String TEST_DEFAULT_NAME = "test user name";
+    public static final UserMetadataOutput TEST_USER_METADATA_OUTPUT_WITH_DEFAULT_NAME = new UserMetadataOutput(TEST_DEFAULT_NAME);
 
     public static final UserMetadataOutput TEST_USER_METADATA_OUTPUT_EMPTY = new UserMetadataOutput(null);
 

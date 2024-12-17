@@ -32,6 +32,10 @@ public class FryRankApplication {
 						"http://fryrank-beta-stage.oxyserver.com",
 						// Local Dev Testing URL
 						"http://localhost:3000"
+				).allowedMethods(
+						"GET",
+						"POST",
+						"PUT"
 				);
 			}
 		};

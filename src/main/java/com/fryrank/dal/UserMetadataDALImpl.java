@@ -20,7 +20,28 @@ public class UserMetadataDALImpl implements UserMetadataDAL {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public UserMetadataOutput getUserMetadataForAccountId(String accountId) {
+    public UserMetadataOutput putUserMetadataForAccountId(String accountId, String defaultUserName) {
+        final Query query = new Query();
+        final Criteria equalToUserIdCriteria = Criteria.where(ACCOUNT_ID_KEY).is(accountId);
+        query.addCriteria(equalToUserIdCriteria);
+        final List<UserMetadata> userMetadata = mongoTemplate.find(query, UserMetadata.class);
+        if(!userMetadata.isEmpty()) {
+            if(userMetadata.size() > 1) {
+                // TODO(https://github.com/NickPriv/FryRankBackend/issues/76): Add warning logging statement here.
+            }
+            return new UserMetadataOutput(userMetadata.get(0).getUsername());
+        }
+        else {
+            UserMetadata newUserMetadata = new UserMetadata(
+                    accountId,
+                    defaultUserName
+            );
+            return upsertUserMetadata(newUserMetadata);
+        }
+    }
+
+    @Override
+    public UserMetadataOutput getUserMetadataForAccountId(final String accountId) {
         final Query query = new Query();
         final Criteria equalToUserIdCriteria = Criteria.where(ACCOUNT_ID_KEY).is(accountId);
         query.addCriteria(equalToUserIdCriteria);
