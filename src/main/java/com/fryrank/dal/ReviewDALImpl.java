@@ -40,7 +40,7 @@ public class ReviewDALImpl implements ReviewDAL {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    private static final List<AggregationOperation> AGGREGATION_OPERATIONS_FOR_PUBLIC_UISER_METADATA_COLLECTION_JOIN =
+    private static final List<AggregationOperation> AGGREGATION_OPERATIONS_FOR_PUBLIC_USER_METADATA_COLLECTION_JOIN =
             new ArrayList<>(Arrays.asList(
                     LookupOperation.newLookup()
                             .from(USER_METADATA_COLLECTION_NAME)
@@ -52,7 +52,7 @@ public class ReviewDALImpl implements ReviewDAL {
 
     @Override
     public GetAllReviewsOutput getAllReviewsByRestaurantId(@NonNull final String restaurantId) {
-        List<AggregationOperation> aggregationOperations = new ArrayList<>(AGGREGATION_OPERATIONS_FOR_PUBLIC_UISER_METADATA_COLLECTION_JOIN);
+        List<AggregationOperation> aggregationOperations = new ArrayList<>(AGGREGATION_OPERATIONS_FOR_PUBLIC_USER_METADATA_COLLECTION_JOIN);
         final Criteria equalToRestaurantIdCriteria = Criteria.where(RESTAURANT_ID_KEY).is(restaurantId);
         aggregationOperations.add(match(equalToRestaurantIdCriteria));
 
@@ -64,7 +64,7 @@ public class ReviewDALImpl implements ReviewDAL {
 
     @Override
     public GetAllReviewsOutput getAllReviewsByAccountId(@NonNull final String accountId) {
-        List<AggregationOperation> aggregationOperations = new ArrayList<>(AGGREGATION_OPERATIONS_FOR_PUBLIC_UISER_METADATA_COLLECTION_JOIN);
+        List<AggregationOperation> aggregationOperations = new ArrayList<>(AGGREGATION_OPERATIONS_FOR_PUBLIC_USER_METADATA_COLLECTION_JOIN);
         final Criteria equalToAccountIdCriteria = Criteria.where(ACCOUNT_ID_KEY).is(accountId);
         aggregationOperations.add(match(equalToAccountIdCriteria));
 
@@ -76,7 +76,7 @@ public class ReviewDALImpl implements ReviewDAL {
 
     @Override
     public GetAllReviewsOutput getTopMostRecentReviews(@NonNull final Integer count){
-        List<AggregationOperation> aggregationOperations = new ArrayList<>(AGGREGATION_OPERATIONS_FOR_PUBLIC_UISER_METADATA_COLLECTION_JOIN);
+        List<AggregationOperation> aggregationOperations = new ArrayList<>(AGGREGATION_OPERATIONS_FOR_PUBLIC_USER_METADATA_COLLECTION_JOIN);
         aggregationOperations.add(sort(Sort.by(Sort.Direction.DESC, ISO_DATE_TIME)));
         aggregationOperations.add(limit(count));
 
