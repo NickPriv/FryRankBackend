@@ -100,12 +100,11 @@ public class ReviewDALTests {
     }
 
     @Test public void testGetTopMostRecentReviews() throws Exception {
-        final Query query = new Query();
-        query.with(Sort.by(Sort.Direction.DESC, ISO_DATE_TIME));
-        query.limit(TEST_REVIEWS.size());
+        AggregationResults<Review> aggregationResults = new AggregationResults<>(TEST_REVIEWS, new Document());
+        when(mongoTemplate.aggregate(Mockito.any(Aggregation.class), Mockito.anyString(), Mockito.eq(Review.class))).thenReturn(aggregationResults);
 
-        when(mongoTemplate.find(query, Review.class)).thenReturn(TEST_REVIEWS);
+        final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(TEST_REVIEWS);
         final GetAllReviewsOutput actualOutput = reviewDAL.getTopMostRecentReviews(TEST_REVIEWS.size());
-        assertEquals(TEST_REVIEWS.size(), actualOutput.getReviews().size());
+        assertEquals(actualOutput, expectedOutput);
     }
 }
