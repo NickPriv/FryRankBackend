@@ -93,9 +93,9 @@ public class ReviewDALImpl implements ReviewDAL {
         final Criteria idInRestaurantIdsInput = Criteria.where(RESTAURANT_ID_KEY).in(restaurantIds);
         final MatchOperation filterToRestaurantId = match(idInRestaurantIdsInput);
         final Criteria hasAccountId = Criteria.where(ACCOUNT_ID_KEY).exists(true);
-        final MatchOperation filterToUserId = match(hasAccountId);
+        final MatchOperation filterToAccountId = match(hasAccountId);
         final GroupOperation averageScoreGroupOperation = group(RESTAURANT_ID_KEY).avg("score").as("avgScore");
-        final Aggregation aggregation = newAggregation(filterToRestaurantId, filterToUserId, averageScoreGroupOperation);
+        final Aggregation aggregation = newAggregation(filterToRestaurantId, filterToAccountId, averageScoreGroupOperation);
         final AggregationResults<AggregateReviewInformation> result = mongoTemplate.aggregate(aggregation, REVIEW_COLLECTION_NAME, AggregateReviewInformation.class);
         final List<AggregateReviewInformation> aggregateReviewInformationList = result.getMappedResults();
 
