@@ -88,14 +88,14 @@ public class ReviewDALImpl implements ReviewDAL {
 
     @Override
     public GetAggregateReviewInformationOutput getAggregateReviewInformationForRestaurants(@NonNull final List<String> restaurantIds, @NonNull final AggregateReviewFilter aggregateReviewFilter) {
-        final Query query = new Query().addCriteria(Criteria.where(RESTAURANT_ID_KEY).in(restaurantIds));
-
         Map<String, AggregateReviewInformation> restaurantIdToAggregateReviewInformation = new HashMap<String, AggregateReviewInformation>();
 
-        final Criteria includeRestaurantIdsCriteria = Criteria.where(RESTAURANT_ID_KEY).in(restaurantIds);
-        final MatchOperation filterToRestaurantId = match(includeRestaurantIdsCriteria);
+        final Criteria idInRestaurantIdsInput = Criteria.where(RESTAURANT_ID_KEY).in(restaurantIds);
+        final MatchOperation filterToRestaurantId = match(idInRestaurantIdsInput);
+        final Criteria hasAccountId = Criteria.where(ACCOUNT_ID_KEY).exists(true);
+        final MatchOperation filterToUserId = match(hasAccountId);
         final GroupOperation averageScoreGroupOperation = group(RESTAURANT_ID_KEY).avg("score").as("avgScore");
-        final Aggregation aggregation = newAggregation(filterToRestaurantId, averageScoreGroupOperation);
+        final Aggregation aggregation = newAggregation(filterToRestaurantId, filterToUserId, averageScoreGroupOperation);
         final AggregationResults<AggregateReviewInformation> result = mongoTemplate.aggregate(aggregation, REVIEW_COLLECTION_NAME, AggregateReviewInformation.class);
         final List<AggregateReviewInformation> aggregateReviewInformationList = result.getMappedResults();
 
