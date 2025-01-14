@@ -1,12 +1,12 @@
 package com.fryrank.dal;
 
-import com.fryrank.model.UserMetadata;
-import com.fryrank.model.UserMetadataOutput;
+import com.fryrank.model.PublicUserMetadata;
+import com.fryrank.model.PublicUserMetadataOutput;
 
 public interface UserMetadataDAL {
-    UserMetadataOutput putUserMetadataForAccountId(final String accountId, final String defaultUserName);
+    PublicUserMetadataOutput putPublicUserMetadataForAccountId(final String accountId, final String defaultUserName);
 
-    UserMetadataOutput getUserMetadataForAccountId(final String accountId);
+    PublicUserMetadataOutput getPublicUserMetadataForAccountId(final String accountId);
 
-    UserMetadataOutput upsertUserMetadata(final UserMetadata userMetadata);
+    PublicUserMetadataOutput upsertPublicUserMetadata(final PublicUserMetadata userMetadata);
 }

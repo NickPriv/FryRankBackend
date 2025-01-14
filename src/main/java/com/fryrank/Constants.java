@@ -21,5 +21,5 @@ public class Constants {
 
     // MongoDB collection names
     public static final String REVIEW_COLLECTION_NAME = "review";
-    public static final String USER_METADATA_COLLECTION_NAME = "user-metadata";
+    public static final String PUBLIC_USER_METADATA_COLLECTION_NAME = "user-metadata";
 }
