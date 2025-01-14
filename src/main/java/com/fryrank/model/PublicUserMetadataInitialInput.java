@@ -1,11 +1,10 @@
 package com.fryrank.model;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("user-metadata")
+@Document("public-user-metadata")
 @Data
-public class UserMetadataInitialInput {
+public class PublicUserMetadataInitialInput {
     private final String username;
 }

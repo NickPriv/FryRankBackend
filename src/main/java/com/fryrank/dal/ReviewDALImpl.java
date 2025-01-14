@@ -28,7 +28,7 @@ import static com.fryrank.Constants.ISO_DATE_TIME;
 import static com.fryrank.Constants.ACCOUNT_ID_KEY;
 import static com.fryrank.Constants.PRIMARY_KEY;
 import static com.fryrank.Constants.REVIEW_COLLECTION_NAME;
-import static com.fryrank.Constants.USER_METADATA_COLLECTION_NAME;
+import static com.fryrank.Constants.PUBLIC_USER_METADATA_COLLECTION_NAME;
 import static com.fryrank.Constants.USER_METADATA_OUTPUT_FIELD_NAME;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
@@ -43,7 +43,7 @@ public class ReviewDALImpl implements ReviewDAL {
     private static final List<AggregationOperation> AGGREGATION_OPERATIONS_FOR_PUBLIC_USER_METADATA_COLLECTION_JOIN =
             new ArrayList<>(Arrays.asList(
                     LookupOperation.newLookup()
-                            .from(USER_METADATA_COLLECTION_NAME)
+                            .from(PUBLIC_USER_METADATA_COLLECTION_NAME)
                             .localField(ACCOUNT_ID_KEY)
                             .foreignField(PRIMARY_KEY)
                             .as(USER_METADATA_OUTPUT_FIELD_NAME),

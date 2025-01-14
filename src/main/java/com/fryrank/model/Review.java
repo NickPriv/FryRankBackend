@@ -27,5 +27,5 @@ public class Review {
 
     private final String accountId;
 
-    private final UserMetadata userMetadata;
+    private final PublicUserMetadata userMetadata;
 }
