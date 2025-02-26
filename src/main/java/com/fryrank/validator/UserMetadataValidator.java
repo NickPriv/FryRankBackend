@@ -1,6 +1,6 @@
 package com.fryrank.validator;
 
-import com.fryrank.model.UserMetadata;
+import com.fryrank.model.PublicUserMetadata;
 import lombok.NonNull;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -12,12 +12,12 @@ public class UserMetadataValidator implements Validator {
     public static final String ACCOUNT_ID = "accountId";
     @Override
     public boolean supports(@NonNull Class clazz) {
-        return UserMetadata.class.isAssignableFrom(clazz);
+        return PublicUserMetadata.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(@NonNull Object target, @NonNull Errors errors) {
-        UserMetadata userMetadata = (UserMetadata) target;
+        PublicUserMetadata userMetadata = (PublicUserMetadata) target;
         String username = userMetadata.getUsername();
         if(username == null) {
             errors.rejectValue(USERNAME, REJECTION_REQUIRED_CODE);

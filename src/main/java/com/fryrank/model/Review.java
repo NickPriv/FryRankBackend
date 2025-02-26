@@ -15,9 +15,6 @@ public class Review {
     private final String restaurantId;
 
     @NonNull
-    private final String authorId;
-
-    @NonNull
     private final Double score;
 
     @NonNull
@@ -30,4 +27,5 @@ public class Review {
 
     private final String accountId;
 
+    private final PublicUserMetadata userMetadata;
 }
