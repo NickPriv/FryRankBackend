@@ -7,6 +7,7 @@ import com.fryrank.validator.UserMetadataValidator;
 import com.fryrank.validator.ValidatorException;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 
 import static com.fryrank.Constants.API_PATH;
 import static com.fryrank.Constants.GENERIC_VALIDATOR_ERROR_MESSAGE;
@@ -24,8 +27,19 @@ import static com.fryrank.Constants.USER_METADATA_VALIDATOR_ERRORS_OBJECT_NAME;
 public class UserMetadataController {
     private static final String USER_METADATA_URI = API_PATH + "/userMetadata";
 
+    @Value("${TOKEN_KEY}")
+    private String token_key;
+
     @Autowired
     private UserMetadataDAL userMetadataDAL;
+
+    @PostMapping(value=USER_METADATA_URI + "/decode")
+    public String decodeToken(@RequestBody String token ) {
+        Claims claims = Jwts.parserBuilder().setSigningKey(token_key.getBytes()).build().parseClaimsJws(token).getBody();
+
+        String accountId = claims.get("userId", String.class);
+        return accountId;
+    }
 
     @PostMapping(value=USER_METADATA_URI)
     public PublicUserMetadataOutput upsertPublicUserMetadata(@RequestBody @NonNull final PublicUserMetadata userMetadata) throws ValidatorException {
