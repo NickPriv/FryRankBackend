@@ -33,8 +33,9 @@ public class UserMetadataController {
     @Autowired
     private UserMetadataDAL userMetadataDAL;
 
-    @PostMapping(value=USER_METADATA_URI + "/decode")
-    public String decodeToken(@RequestBody String token ) {
+    //@PostMapping(value=USER_METADATA_URI + "/decode")
+    public String decodeToken(String token ) {
+
         Claims claims = Jwts.parserBuilder().setSigningKey(token_key.getBytes()).build().parseClaimsJws(token).getBody();
 
         String accountId = claims.get("userId", String.class);
@@ -55,7 +56,11 @@ public class UserMetadataController {
 
     @PutMapping(value=USER_METADATA_URI)
     public PublicUserMetadataOutput putPublicUserMetadata(@RequestParam final String accountId, @RequestParam @NonNull final String defaultUsername) {
-        return userMetadataDAL.putPublicUserMetadataForAccountId(accountId, defaultUsername);
+        if (accountId ==null || accountId.isEmpty()){
+            return userMetadataDAL.putPublicUserMetadataForAccountId(null, defaultUsername);
+        }
+        String decodeAccount = decodeToken(accountId);
+        return userMetadataDAL.putPublicUserMetadataForAccountId(decodeAccount, defaultUsername);
     }
 
     @GetMapping(value=USER_METADATA_URI)
