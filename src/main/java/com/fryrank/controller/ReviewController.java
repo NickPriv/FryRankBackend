@@ -59,7 +59,7 @@ public class ReviewController {
         return reviewDAL.getAggregateReviewInformationForRestaurants(parsedIDs, filter);
     }
 
-    @PostMapping(value = REVIEWS_URI)
+    @PostMapping(value = REVIEWS_URI) //parse the token
     public Review addNewReviewForRestaurant(@RequestBody @NonNull final Review review) throws ValidatorException {
         BindingResult bindingResult = new BeanPropertyBindingResult(review, REVIEW_VALIDATOR_ERRORS_OBJECT_NAME);
         ReviewValidator validator = new ReviewValidator();

@@ -10,18 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import org.springframework.web.bind.annotation.*;
 
-import static com.fryrank.Constants.API_PATH;
-import static com.fryrank.Constants.GENERIC_VALIDATOR_ERROR_MESSAGE;
-import static com.fryrank.Constants.USER_METADATA_VALIDATOR_ERRORS_OBJECT_NAME;
+import static com.fryrank.Constants.*;
+import static com.fryrank.utils.TokenUtils.decodeToken;
 
 @RestController
 public class UserMetadataController {
@@ -32,15 +24,6 @@ public class UserMetadataController {
 
     @Autowired
     private UserMetadataDAL userMetadataDAL;
-
-    //@PostMapping(value=USER_METADATA_URI + "/decode")
-    public String decodeToken(String token ) {
-
-        Claims claims = Jwts.parserBuilder().setSigningKey(token_key.getBytes()).build().parseClaimsJws(token).getBody();
-
-        String accountId = claims.get("userId", String.class);
-        return accountId;
-    }
 
     @PostMapping(value=USER_METADATA_URI)
     public PublicUserMetadataOutput upsertPublicUserMetadata(@RequestBody @NonNull final PublicUserMetadata userMetadata) throws ValidatorException {
@@ -59,12 +42,17 @@ public class UserMetadataController {
         if (accountId ==null || accountId.isEmpty()){
             return userMetadataDAL.putPublicUserMetadataForAccountId(null, defaultUsername);
         }
-        String decodeAccount = decodeToken(accountId);
+        String decodeAccount = decodeToken(accountId, token_key);
         return userMetadataDAL.putPublicUserMetadataForAccountId(decodeAccount, defaultUsername);
     }
 
     @GetMapping(value=USER_METADATA_URI)
     public PublicUserMetadataOutput getPublicUserMetadata(@RequestParam final String accountId) {
-        return userMetadataDAL.getPublicUserMetadataForAccountId(accountId);
+        if (accountId ==null || accountId.isEmpty()){
+            return userMetadataDAL.getPublicUserMetadataForAccountId(null);
+        }
+        String decodeAccount = decodeToken(accountId, token_key);
+        System.out.println(" the decoded token" +  decodeAccount);
+        return userMetadataDAL.getPublicUserMetadataForAccountId(decodeAccount);
     }
 }

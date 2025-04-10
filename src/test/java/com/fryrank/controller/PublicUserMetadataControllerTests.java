@@ -86,9 +86,10 @@ public class PublicUserMetadataControllerTests {
 
     @Test
     public void testGetUserMetadata() throws Exception {
+        String testToken = generateTestToken();
         when(userMetadataDAL.getPublicUserMetadataForAccountId(TEST_ACCOUNT_ID)).thenReturn(TEST_USER_METADATA_OUTPUT_1);
 
-        final PublicUserMetadataOutput actualUserMetadata = userMetadataController.getPublicUserMetadata(TEST_ACCOUNT_ID);
+        final PublicUserMetadataOutput actualUserMetadata = userMetadataController.getPublicUserMetadata(testToken);
         assertEquals(TEST_USER_METADATA_OUTPUT_1, actualUserMetadata);
     }
 
