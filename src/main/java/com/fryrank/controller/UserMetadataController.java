@@ -12,6 +12,8 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+
 import static com.fryrank.Constants.*;
 import static com.fryrank.utils.TokenUtils.decodeToken;
 
@@ -27,19 +29,25 @@ public class UserMetadataController {
 
     @PostMapping(value=USER_METADATA_URI)
     public PublicUserMetadataOutput upsertPublicUserMetadata(@RequestBody @NonNull final PublicUserMetadata userMetadata) throws ValidatorException {
-        BindingResult bindingResult = new BeanPropertyBindingResult(userMetadata, USER_METADATA_VALIDATOR_ERRORS_OBJECT_NAME);
+        if (userMetadata.getAccountId() == null || userMetadata.getAccountId().isEmpty() || userMetadata.getUsername() == null || userMetadata.getUsername().isEmpty()) {
+            throw new ValidatorException(Collections.emptyList(), GENERIC_VALIDATOR_ERROR_MESSAGE);
+        }
+
+        String decodeAccount = decodeToken(userMetadata.getAccountId(), token_key);
+        PublicUserMetadata updatedUserMetadata = new PublicUserMetadata(decodeAccount, userMetadata.getUsername());
+        BindingResult bindingResult = new BeanPropertyBindingResult(updatedUserMetadata, USER_METADATA_VALIDATOR_ERRORS_OBJECT_NAME);
         UserMetadataValidator validator = new UserMetadataValidator();
-        validator.validate(userMetadata, bindingResult);
+        validator.validate(updatedUserMetadata, bindingResult);
 
         if(bindingResult.hasErrors()) {
             throw new ValidatorException(bindingResult.getAllErrors(), GENERIC_VALIDATOR_ERROR_MESSAGE);
         }
-        return userMetadataDAL.upsertPublicUserMetadata(userMetadata);
+        return userMetadataDAL.upsertPublicUserMetadata(updatedUserMetadata);
     }
 
     @PutMapping(value=USER_METADATA_URI)
     public PublicUserMetadataOutput putPublicUserMetadata(@RequestParam final String accountId, @RequestParam @NonNull final String defaultUsername) {
-        if (accountId ==null || accountId.isEmpty()){
+        if (accountId == null || accountId.isEmpty()){
             return userMetadataDAL.putPublicUserMetadataForAccountId(null, defaultUsername);
         }
         String decodeAccount = decodeToken(accountId, token_key);

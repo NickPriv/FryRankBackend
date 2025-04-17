@@ -6,24 +6,19 @@ import com.fryrank.model.PublicUserMetadataOutput;
 import com.fryrank.validator.ValidatorException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+
 import java.util.Date;
-import static com.fryrank.TestConstants.TEST_ACCOUNT_ID;
-import static com.fryrank.TestConstants.TEST_DEFAULT_NAME;
-import static com.fryrank.TestConstants.TEST_USERNAME;
-import static com.fryrank.TestConstants.TEST_USER_METADATA_1;
-import static com.fryrank.TestConstants.TEST_USER_METADATA_OUTPUT_1;
-import static com.fryrank.TestConstants.TEST_PUBLIC_USER_METADATA_OUTPUT_EMPTY;
-import static com.fryrank.TestConstants.TEST_PUBLIC_USER_METADATA_OUTPUT_WITH_DEFAULT_NAME;
-import static com.fryrank.TestConstants.TEST_TOKEN;
+
+import static com.fryrank.TestConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import org.junit.Before;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -50,8 +45,11 @@ public class PublicUserMetadataControllerTests {
 
     @Test
     public void testUpsertUserMetadata() throws Exception {
+        String testToken = generateTestToken();
+        PublicUserMetadata userMetadata = new PublicUserMetadata(testToken, TEST_USERNAME);
+
         when(userMetadataDAL.upsertPublicUserMetadata(TEST_USER_METADATA_1)).thenReturn(TEST_USER_METADATA_OUTPUT_1);
-        final PublicUserMetadataOutput actualUserMetadata = userMetadataController.upsertPublicUserMetadata(TEST_USER_METADATA_1);
+        final PublicUserMetadataOutput actualUserMetadata = userMetadataController.upsertPublicUserMetadata(userMetadata);
         assertEquals(TEST_USER_METADATA_OUTPUT_1, actualUserMetadata);
     }
 
