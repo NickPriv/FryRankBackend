@@ -67,7 +67,6 @@ public class UserMetadataController {
             return userMetadataDAL.getPublicUserMetadataForAccountId(null);
         }
         String decodeAccount = decodeToken(accountId, token_key);
-        System.out.println(" the decoded token" +  decodeAccount);
         return userMetadataDAL.getPublicUserMetadataForAccountId(decodeAccount);
     }
 }

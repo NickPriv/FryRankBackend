@@ -3,30 +3,24 @@ package com.fryrank.controller;
 import com.fryrank.dal.ReviewDAL;
 import com.fryrank.model.*;
 import com.fryrank.validator.ValidatorException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.fryrank.TestConstants.TEST_ACCOUNT_ID;
-import static com.fryrank.TestConstants.TEST_BODY_1;
-import static com.fryrank.TestConstants.TEST_RESTAURANT_ID;
-import static com.fryrank.TestConstants.TEST_RESTAURANT_ID_1;
-import static com.fryrank.TestConstants.TEST_RESTAURANT_ID_2;
-import static com.fryrank.TestConstants.TEST_REVIEWS;
-import static com.fryrank.TestConstants.TEST_REVIEW_1;
-import static com.fryrank.TestConstants.TEST_REVIEW_BAD_ISO_DATETIME;
-import static com.fryrank.TestConstants.TEST_REVIEW_NULL_ACCOUNT_ID;
-import static com.fryrank.TestConstants.TEST_REVIEW_NULL_ISO_DATETIME;
-import static com.fryrank.TestConstants.TEST_REVIEW_ID_1;
-import static com.fryrank.TestConstants.TEST_TITLE_1;
-import static com.fryrank.TestConstants.TEST_ISO_DATE_TIME_1;
+import static com.fryrank.TestConstants.*;
+import static com.fryrank.TestConstants.TEST_TOKEN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.when;
@@ -39,6 +33,21 @@ public class ReviewControllerTests {
 
     @InjectMocks
     ReviewController controller;
+
+    @Before
+    public void setUp() {
+        ReflectionTestUtils.setField(controller, "token_key", TEST_TOKEN);
+    }
+
+    private String generateTestToken() {
+        return Jwts.builder()
+                .setSubject(TEST_ACCOUNT_ID) // Example user ID
+                .setIssuedAt(new Date()) // Issue time
+                .claim("userId", TEST_ACCOUNT_ID) // Add claims
+                .signWith(SignatureAlgorithm.HS256, TEST_TOKEN.getBytes())
+                .compact();
+    }
+
 
     // /api/reviews endpoint tests
     @Test
@@ -77,8 +86,7 @@ public class ReviewControllerTests {
     public void testAddNewReviewForRestaurant() throws Exception {
         when(reviewDAL.addNewReview(TEST_REVIEW_1)).thenReturn(TEST_REVIEW_1);
 
-        Review actualReview = controller.addNewReviewForRestaurant(TEST_REVIEW_1);
-
+        Review actualReview = controller.addNewReviewForRestaurant(TEST_REVIEW_JWT);
         assertEquals(TEST_REVIEW_1, actualReview);
     }
 
@@ -89,11 +97,12 @@ public class ReviewControllerTests {
 
     @Test
     public void testAddNewReviewNullReviewID() throws Exception {
+        Review reviewJWT = new Review(null, TEST_RESTAURANT_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1,  ACCOUNT_JWT, null);
         Review expectedReview = new Review(null, TEST_RESTAURANT_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
 
         when(reviewDAL.addNewReview(expectedReview)).thenReturn(expectedReview);
 
-        Review actualReview = controller.addNewReviewForRestaurant(expectedReview);
+        Review actualReview = controller.addNewReviewForRestaurant(reviewJWT);
 
         assertEquals(expectedReview, actualReview);
     }

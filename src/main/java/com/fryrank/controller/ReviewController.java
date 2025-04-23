@@ -1,14 +1,12 @@
 package com.fryrank.controller;
 
 import com.fryrank.dal.ReviewDAL;
-import com.fryrank.model.AggregateReviewFilter;
-import com.fryrank.model.GetAggregateReviewInformationOutput;
-import com.fryrank.model.GetAllReviewsOutput;
-import com.fryrank.model.Review;
+import com.fryrank.model.*;
 import com.fryrank.validator.ReviewValidator;
 import com.fryrank.validator.ValidatorException;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +18,7 @@ import java.util.stream.Collectors;
 import static com.fryrank.Constants.API_PATH;
 import static com.fryrank.Constants.GENERIC_VALIDATOR_ERROR_MESSAGE;
 import static com.fryrank.Constants.REVIEW_VALIDATOR_ERRORS_OBJECT_NAME;
+import static com.fryrank.utils.TokenUtils.decodeToken;
 
 @RestController
 public class ReviewController {
@@ -30,6 +29,9 @@ public class ReviewController {
 
     @Autowired
     private ReviewDAL reviewDAL;
+
+    @Value("${TOKEN_KEY}")
+    private String token_key;
 
     @GetMapping(value = REVIEWS_URI)
     public GetAllReviewsOutput getAllReviews(
@@ -61,13 +63,26 @@ public class ReviewController {
 
     @PostMapping(value = REVIEWS_URI) //parse the token
     public Review addNewReviewForRestaurant(@RequestBody @NonNull final Review review) throws ValidatorException {
-        BindingResult bindingResult = new BeanPropertyBindingResult(review, REVIEW_VALIDATOR_ERRORS_OBJECT_NAME);
+        String decodedAccountId = (review.getAccountId() != null) ? decodeToken(review.getAccountId(), token_key) : null;
+
+        Review validatedReview = new Review(
+                review.getReviewId(),
+                review.getRestaurantId(),
+                review.getScore(),
+                review.getTitle(),
+                review.getBody(),
+                review.getIsoDateTime(),
+                decodedAccountId,
+                review.getUserMetadata()
+        );
+
+        BindingResult bindingResult = new BeanPropertyBindingResult(validatedReview, REVIEW_VALIDATOR_ERRORS_OBJECT_NAME);
         ReviewValidator validator = new ReviewValidator();
-        validator.validate(review, bindingResult);
+        validator.validate(validatedReview, bindingResult);
 
         if(bindingResult.hasErrors()) {
             throw new ValidatorException(bindingResult.getAllErrors(), GENERIC_VALIDATOR_ERROR_MESSAGE);
         }
-        return reviewDAL.addNewReview(review);
+        return reviewDAL.addNewReview(validatedReview);
     }
 }
