@@ -16,10 +16,16 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Date;
 
-import static com.fryrank.TestConstants.*;
+import static com.fryrank.TestConstants.TEST_ACCOUNT_ID;
+import static com.fryrank.TestConstants.TEST_DEFAULT_NAME;
+import static com.fryrank.TestConstants.TEST_USERNAME;
+import static com.fryrank.TestConstants.TEST_USER_METADATA_1;
+import static com.fryrank.TestConstants.TEST_USER_METADATA_OUTPUT_1;
+import static com.fryrank.TestConstants.TEST_PUBLIC_USER_METADATA_OUTPUT_EMPTY;
+import static com.fryrank.TestConstants.TEST_PUBLIC_USER_METADATA_OUTPUT_WITH_DEFAULT_NAME;
+import static com.fryrank.TestConstants.TEST_TOKEN;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-
 
 @RunWith(MockitoJUnitRunner.class)
 public class PublicUserMetadataControllerTests {
