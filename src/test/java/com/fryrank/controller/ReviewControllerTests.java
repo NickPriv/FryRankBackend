@@ -64,7 +64,7 @@ public class ReviewControllerTests {
         final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(TEST_REVIEWS);
         when(reviewDAL.getAllReviewsByAccountId(TEST_ACCOUNT_ID)).thenReturn(expectedOutput);
 
-        final GetAllReviewsOutput actualOutput = controller.getAllReviews(null, TEST_ACCOUNT_ID);
+        final GetAllReviewsOutput actualOutput = controller.getAllReviews(null, ACCOUNT_JWT);
         assertEquals(expectedOutput, actualOutput);
     }
 
@@ -109,14 +109,14 @@ public class ReviewControllerTests {
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullRestaurantID() throws Exception {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, null, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, null, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1,  ACCOUNT_JWT, null);
 
         controller.addNewReviewForRestaurant(expectedReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullScore() throws Exception {
-        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, null, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
+        Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, null, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, ACCOUNT_JWT, null);
 
         controller.addNewReviewForRestaurant(expectedReview);
     }

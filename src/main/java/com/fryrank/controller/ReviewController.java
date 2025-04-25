@@ -40,7 +40,8 @@ public class ReviewController {
         if (restaurantId != null) {
             return reviewDAL.getAllReviewsByRestaurantId(restaurantId);
         } else if (accountId != null) {
-            return reviewDAL.getAllReviewsByAccountId(accountId);
+            String decodedAccountId = decodeToken(accountId, token_key);
+            return reviewDAL.getAllReviewsByAccountId(decodedAccountId);
         } else {
             throw new NullPointerException("At least one of restaurantId and accountId must not be null.");
         }
@@ -65,24 +66,15 @@ public class ReviewController {
     public Review addNewReviewForRestaurant(@RequestBody @NonNull final Review review) throws ValidatorException {
         String decodedAccountId = (review.getAccountId() != null) ? decodeToken(review.getAccountId(), token_key) : null;
 
-        Review validatedReview = new Review(
-                review.getReviewId(),
-                review.getRestaurantId(),
-                review.getScore(),
-                review.getTitle(),
-                review.getBody(),
-                review.getIsoDateTime(),
-                decodedAccountId,
-                review.getUserMetadata()
-        );
+        review.setAccountId(decodedAccountId);
 
-        BindingResult bindingResult = new BeanPropertyBindingResult(validatedReview, REVIEW_VALIDATOR_ERRORS_OBJECT_NAME);
+        BindingResult bindingResult = new BeanPropertyBindingResult(review, REVIEW_VALIDATOR_ERRORS_OBJECT_NAME);
         ReviewValidator validator = new ReviewValidator();
-        validator.validate(validatedReview, bindingResult);
+        validator.validate(review, bindingResult);
 
         if(bindingResult.hasErrors()) {
             throw new ValidatorException(bindingResult.getAllErrors(), GENERIC_VALIDATOR_ERROR_MESSAGE);
         }
-        return reviewDAL.addNewReview(validatedReview);
+        return reviewDAL.addNewReview(review);
     }
 }
