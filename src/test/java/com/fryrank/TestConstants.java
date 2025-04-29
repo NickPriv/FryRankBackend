@@ -65,7 +65,7 @@ public class TestConstants {
         TEST_TITLE_1,
         TEST_BODY_1,
         null,
-            ACCOUNT_JWT,
+            TEST_ACCOUNT_ID,
         TEST_USER_METADATA_1
     );
 
@@ -76,7 +76,7 @@ public class TestConstants {
         TEST_TITLE_1,
         TEST_BODY_1,
         "not-a-real-date",
-            ACCOUNT_JWT,
+            TEST_ACCOUNT_ID,
         TEST_USER_METADATA_1
     );
 

@@ -114,7 +114,6 @@ public class ReviewDALImpl implements ReviewDAL {
 
     @Override
     public Review addNewReview(@NonNull final Review review) {
-        System.out.println("Decoded accountId for inserting: " + review.getAccountId());
         final Query query = new Query().addCriteria(Criteria.where("_id").is(review.getRestaurantId() + ":" + review.getAccountId()));
         final FindAndReplaceOptions options = new FindAndReplaceOptions();
         options.upsert();
