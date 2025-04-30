@@ -97,7 +97,7 @@ public class ReviewControllerTests {
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewForNullRestaurant() throws Exception {
         String testToken = generateTestToken();
-        controller.addNewReviewForRestaurant(testToken,null);
+        controller.addNewReviewForRestaurant(testToken, null);
     }
 
     @Test
