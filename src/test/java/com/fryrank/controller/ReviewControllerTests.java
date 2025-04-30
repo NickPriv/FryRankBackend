@@ -1,7 +1,5 @@
-
 package com.fryrank.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fryrank.dal.ReviewDAL;
 import com.fryrank.model.*;
 import com.fryrank.validator.ValidatorException;
@@ -13,11 +11,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,12 +36,6 @@ public class ReviewControllerTests {
 
     @InjectMocks
     ReviewController controller;
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
 
     @Before
     public void setUp() {

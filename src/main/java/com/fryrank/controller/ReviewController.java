@@ -65,7 +65,7 @@ public class ReviewController {
     }
 
     @PostMapping(value = REVIEWS_URI) //parse the token
-    public Review addNewReviewForRestaurant( @RequestHeader("Authorization") String jwtToken, @RequestBody @NonNull final Review review) throws ValidatorException, AccessDeniedException {
+    public Review addNewReviewForRestaurant(@RequestHeader("Authorization") String jwtToken, @RequestBody @NonNull final Review review) throws ValidatorException, AccessDeniedException {
         String decodedAccountId =  decodeToken(jwtToken, token_key);
         if(!decodedAccountId.equals(review.getAccountId()) && review.getAccountId()!=null) {
             throw new AccessDeniedException("Invalid accountId from JWT.");
