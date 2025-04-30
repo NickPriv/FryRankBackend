@@ -19,9 +19,13 @@ public class TestConstants {
     public static final String TEST_BODY_1 = "body_1";
     public static final String TEST_BODY_2 = "body_2";
     public static final String TEST_ISO_DATE_TIME_1 = "1970-01-01T00:00:00Z";
-    public static final String TEST_ACCOUNT_ID = "test_account_id";
+    public static final String TEST_ACCOUNT_ID = "1234567890";
     public static final String TEST_ACCOUNT_ID_NO_USER_METADATA = "test_account_id_no_user_metadata";
     public static final String TEST_USERNAME = "testflush";
+
+    public static final String TEST_TOKEN = "3c2353bc79ff762690f24ea376b4eb940f1db01427b39a65fb9153d59f011e46";
+
+    public static final String ACCOUNT_JWT = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNzQ1MzgzODcwLCJ1c2VySWQiOiIxMjM0NTY3ODkwIn0.-VUzBtKs_3puwIGLBEA2l2lBoAGTD7FunzViENIwA3M";
 
     public static final PublicUserMetadata TEST_USER_METADATA_1 = new PublicUserMetadata(
         TEST_ACCOUNT_ID,
@@ -30,6 +34,17 @@ public class TestConstants {
 
     public static final PublicUserMetadataOutput TEST_USER_METADATA_OUTPUT_1 = new PublicUserMetadataOutput(
         TEST_USERNAME
+    );
+
+    public static final Review TEST_REVIEW_JWT = new Review(
+            TEST_REVIEW_ID_1,
+            TEST_RESTAURANT_ID,
+            5.0 ,
+            TEST_TITLE_1,
+            TEST_BODY_1,
+            TEST_ISO_DATE_TIME_1,
+            ACCOUNT_JWT,
+            null
     );
 
     public static final Review TEST_REVIEW_1 = new Review(
@@ -50,7 +65,7 @@ public class TestConstants {
         TEST_TITLE_1,
         TEST_BODY_1,
         null,
-        TEST_ACCOUNT_ID,
+            TEST_ACCOUNT_ID,
         TEST_USER_METADATA_1
     );
 
@@ -61,7 +76,7 @@ public class TestConstants {
         TEST_TITLE_1,
         TEST_BODY_1,
         "not-a-real-date",
-        TEST_ACCOUNT_ID,
+            TEST_ACCOUNT_ID,
         TEST_USER_METADATA_1
     );
 

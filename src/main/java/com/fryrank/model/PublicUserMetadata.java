@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 public class PublicUserMetadata {
     @Id
-    private final String accountId;
+    private final String accountId;//pass the token
 
     private final String username;
 }

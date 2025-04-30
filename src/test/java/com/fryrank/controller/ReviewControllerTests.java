@@ -3,42 +3,53 @@ package com.fryrank.controller;
 import com.fryrank.dal.ReviewDAL;
 import com.fryrank.model.*;
 import com.fryrank.validator.ValidatorException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.fryrank.TestConstants.TEST_ACCOUNT_ID;
-import static com.fryrank.TestConstants.TEST_BODY_1;
-import static com.fryrank.TestConstants.TEST_RESTAURANT_ID;
-import static com.fryrank.TestConstants.TEST_RESTAURANT_ID_1;
-import static com.fryrank.TestConstants.TEST_RESTAURANT_ID_2;
-import static com.fryrank.TestConstants.TEST_REVIEWS;
-import static com.fryrank.TestConstants.TEST_REVIEW_1;
-import static com.fryrank.TestConstants.TEST_REVIEW_BAD_ISO_DATETIME;
-import static com.fryrank.TestConstants.TEST_REVIEW_NULL_ACCOUNT_ID;
-import static com.fryrank.TestConstants.TEST_REVIEW_NULL_ISO_DATETIME;
-import static com.fryrank.TestConstants.TEST_REVIEW_ID_1;
-import static com.fryrank.TestConstants.TEST_TITLE_1;
-import static com.fryrank.TestConstants.TEST_ISO_DATE_TIME_1;
+import static com.fryrank.TestConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ReviewControllerTests {
     @Mock
     ReviewDAL reviewDAL;
 
     @InjectMocks
     ReviewController controller;
+
+    @Before
+    public void setUp() {
+        ReflectionTestUtils.setField(controller, "token_key", TEST_TOKEN);
+    }
+
+    private String generateTestToken() {
+        return Jwts.builder()
+                .setSubject(TEST_ACCOUNT_ID) // Example user ID
+                .setIssuedAt(new Date()) // Issue time
+                .claim("userId", TEST_ACCOUNT_ID) // Add claims
+                .signWith(SignatureAlgorithm.HS256, TEST_TOKEN.getBytes())
+                .compact();
+    }
 
     // /api/reviews endpoint tests
     @Test
@@ -52,10 +63,11 @@ public class ReviewControllerTests {
 
     @Test
     public void testGetAllReviewsForAccount() throws Exception {
+        String testToken = generateTestToken();
         final GetAllReviewsOutput expectedOutput = new GetAllReviewsOutput(TEST_REVIEWS);
         when(reviewDAL.getAllReviewsByAccountId(TEST_ACCOUNT_ID)).thenReturn(expectedOutput);
 
-        final GetAllReviewsOutput actualOutput = controller.getAllReviews(null, TEST_ACCOUNT_ID);
+        final GetAllReviewsOutput actualOutput = controller.getAllReviews(null, testToken);
         assertEquals(expectedOutput, actualOutput);
     }
 
@@ -75,72 +87,84 @@ public class ReviewControllerTests {
 
     @Test
     public void testAddNewReviewForRestaurant() throws Exception {
+        String testToken = generateTestToken();
         when(reviewDAL.addNewReview(TEST_REVIEW_1)).thenReturn(TEST_REVIEW_1);
 
-        Review actualReview = controller.addNewReviewForRestaurant(TEST_REVIEW_1);
-
+        Review actualReview = controller.addNewReviewForRestaurant(testToken, TEST_REVIEW_1);
         assertEquals(TEST_REVIEW_1, actualReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewForNullRestaurant() throws Exception {
-        controller.addNewReviewForRestaurant(null);
+        String testToken = generateTestToken();
+        controller.addNewReviewForRestaurant(testToken, null);
     }
 
     @Test
     public void testAddNewReviewNullReviewID() throws Exception {
+        String testToken = generateTestToken();
         Review expectedReview = new Review(null, TEST_RESTAURANT_ID_1, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
-
         when(reviewDAL.addNewReview(expectedReview)).thenReturn(expectedReview);
 
-        Review actualReview = controller.addNewReviewForRestaurant(expectedReview);
-
+        Review actualReview = controller.addNewReviewForRestaurant(testToken, expectedReview);
         assertEquals(expectedReview, actualReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullRestaurantID() throws Exception {
+        String testToken = generateTestToken();
         Review expectedReview = new Review(TEST_REVIEW_ID_1, null, 5.0, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
 
-        controller.addNewReviewForRestaurant(expectedReview);
+        controller.addNewReviewForRestaurant(testToken, expectedReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullScore() throws Exception {
+        String testToken = generateTestToken();
         Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, null, TEST_TITLE_1, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
 
-        controller.addNewReviewForRestaurant(expectedReview);
+        controller.addNewReviewForRestaurant(testToken, expectedReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullTitle() throws Exception {
+        String testToken = generateTestToken();
         Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, 5.0, null, TEST_BODY_1, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
 
-        controller.addNewReviewForRestaurant(expectedReview);
+        controller.addNewReviewForRestaurant(testToken, expectedReview);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddNewReviewNullBody() throws Exception {
+        String testToken = generateTestToken();
         Review expectedReview = new Review(TEST_REVIEW_ID_1, TEST_RESTAURANT_ID_1, 5.0, TEST_TITLE_1, null, TEST_ISO_DATE_TIME_1, TEST_ACCOUNT_ID, null);
 
-        controller.addNewReviewForRestaurant(expectedReview);
+        controller.addNewReviewForRestaurant(testToken, expectedReview);
     }
 
     @Test(expected = ValidatorException.class)
     public void testAddNewReviewNullISODateTime() throws Exception {
-        controller.addNewReviewForRestaurant(TEST_REVIEW_NULL_ISO_DATETIME);
+        String testToken = generateTestToken();
+        controller.addNewReviewForRestaurant(testToken, TEST_REVIEW_NULL_ISO_DATETIME);
     }
 
     @Test(expected = ValidatorException.class)
     public void testAddNewBadFormatISODateTime() throws Exception {
-        controller.addNewReviewForRestaurant(TEST_REVIEW_BAD_ISO_DATETIME);
+        String testToken = generateTestToken();
+        controller.addNewReviewForRestaurant(testToken, TEST_REVIEW_BAD_ISO_DATETIME);
+    }
+
+    @Test(expected = ValidatorException.class)
+    public void testAddNewReviewNullAccountId() throws Exception {
+        String testToken = generateTestToken();
+        controller.addNewReviewForRestaurant(testToken, TEST_REVIEW_NULL_ACCOUNT_ID);
     }
 
     // /api/reviews/aggregateInformation endpoint tests
     @Test
     public void testGetSingleRestaurantAllAggregateInformation() throws Exception {
         final Map<String, AggregateReviewInformation> expectedAggregateReviewInformation = Map.of(
-            TEST_RESTAURANT_ID_1, new AggregateReviewInformation(TEST_RESTAURANT_ID_1, 5.0F)
+                TEST_RESTAURANT_ID_1, new AggregateReviewInformation(TEST_RESTAURANT_ID_1, 5.0F)
         );
         final GetAggregateReviewInformationOutput expectedOutput = new GetAggregateReviewInformationOutput(expectedAggregateReviewInformation);
         final List<String> restaurantIds = new ArrayList<String>(){
@@ -159,7 +183,7 @@ public class ReviewControllerTests {
     @Test
     public void testGetMultipleRestaurantAllAggregateInformation() throws Exception {
         final Map<String, AggregateReviewInformation> expectedAggregateReviewInformation = Map.of(
-            TEST_RESTAURANT_ID_1, new AggregateReviewInformation(TEST_RESTAURANT_ID_1, 5.0F),
+                TEST_RESTAURANT_ID_1, new AggregateReviewInformation(TEST_RESTAURANT_ID_1, 5.0F),
                 TEST_RESTAURANT_ID_2, new AggregateReviewInformation(TEST_RESTAURANT_ID_2, 7.0F)
         );
         final GetAggregateReviewInformationOutput expectedOutput = new GetAggregateReviewInformationOutput(expectedAggregateReviewInformation);
@@ -183,7 +207,7 @@ public class ReviewControllerTests {
     @Test
     public void testGetSingleRestaurantNoAggregateInformation() throws Exception {
         final Map<String, AggregateReviewInformation> expectedAggregateReviewInformation = Map.of(
-            TEST_RESTAURANT_ID_1, new AggregateReviewInformation(TEST_RESTAURANT_ID_1, null)
+                TEST_RESTAURANT_ID_1, new AggregateReviewInformation(TEST_RESTAURANT_ID_1, null)
         );
         final GetAggregateReviewInformationOutput expectedOutput = new GetAggregateReviewInformationOutput(expectedAggregateReviewInformation);
         final List<String> restaurantIds = new ArrayList<String>(){
@@ -202,7 +226,7 @@ public class ReviewControllerTests {
     @Test
     public void testGetMultipleRestaurantNoAggregateInformationReverseOrdering() throws Exception {
         final Map<String, AggregateReviewInformation> expectedAggregateReviewInformation = Map.of(
-            TEST_RESTAURANT_ID_1, new AggregateReviewInformation(TEST_RESTAURANT_ID_1, null),
+                TEST_RESTAURANT_ID_1, new AggregateReviewInformation(TEST_RESTAURANT_ID_1, null),
                 TEST_RESTAURANT_ID_2, new AggregateReviewInformation(TEST_RESTAURANT_ID_2, null)
         );
         final GetAggregateReviewInformationOutput expectedOutput = new GetAggregateReviewInformationOutput(expectedAggregateReviewInformation);
@@ -219,9 +243,5 @@ public class ReviewControllerTests {
         final GetAggregateReviewInformationOutput actualOutput = controller.getAggregateReviewInformationForRestaurants(TEST_RESTAURANT_ID_2 + "," + TEST_RESTAURANT_ID_1, false);
         assertEquals(expectedOutput, actualOutput);
     }
-
-    @Test(expected = ValidatorException.class)
-    public void testAddNewReviewNullAccountId() throws Exception {
-        controller.addNewReviewForRestaurant(TEST_REVIEW_NULL_ACCOUNT_ID);
-    }
 }
+

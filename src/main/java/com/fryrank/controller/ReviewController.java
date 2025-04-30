@@ -9,17 +9,18 @@ import com.fryrank.validator.ReviewValidator;
 import com.fryrank.validator.ValidatorException;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.fryrank.Constants.API_PATH;
-import static com.fryrank.Constants.GENERIC_VALIDATOR_ERROR_MESSAGE;
-import static com.fryrank.Constants.REVIEW_VALIDATOR_ERRORS_OBJECT_NAME;
+import static com.fryrank.Constants.*;
+import static com.fryrank.utils.TokenUtils.decodeToken;
 
 @RestController
 public class ReviewController {
@@ -31,6 +32,9 @@ public class ReviewController {
     @Autowired
     private ReviewDAL reviewDAL;
 
+    @Value("${TOKEN_KEY}")
+    private String token_key;
+
     @GetMapping(value = REVIEWS_URI)
     public GetAllReviewsOutput getAllReviews(
         @RequestParam(required = false) final String restaurantId,
@@ -38,7 +42,8 @@ public class ReviewController {
         if (restaurantId != null) {
             return reviewDAL.getAllReviewsByRestaurantId(restaurantId);
         } else if (accountId != null) {
-            return reviewDAL.getAllReviewsByAccountId(accountId);
+            String decodedAccountId = decodeToken(accountId, token_key);
+            return reviewDAL.getAllReviewsByAccountId(decodedAccountId);
         } else {
             throw new NullPointerException("At least one of restaurantId and accountId must not be null.");
         }
@@ -59,8 +64,12 @@ public class ReviewController {
         return reviewDAL.getAggregateReviewInformationForRestaurants(parsedIDs, filter);
     }
 
-    @PostMapping(value = REVIEWS_URI)
-    public Review addNewReviewForRestaurant(@RequestBody @NonNull final Review review) throws ValidatorException {
+    @PostMapping(value = REVIEWS_URI) //parse the token
+    public Review addNewReviewForRestaurant(@RequestHeader("Authorization") String jwtToken, @RequestBody @NonNull final Review review) throws ValidatorException, AccessDeniedException {
+        String decodedAccountId =  decodeToken(jwtToken, token_key);
+        if(!decodedAccountId.equals(review.getAccountId()) && review.getAccountId()!=null) {
+            throw new AccessDeniedException("Invalid accountId from JWT.");
+        }
         BindingResult bindingResult = new BeanPropertyBindingResult(review, REVIEW_VALIDATOR_ERRORS_OBJECT_NAME);
         ReviewValidator validator = new ReviewValidator();
         validator.validate(review, bindingResult);
